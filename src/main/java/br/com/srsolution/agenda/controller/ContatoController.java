@@ -55,6 +55,9 @@ public class ContatoController {
 
 	}
 
+	@Operation(description = "Exibe uma lista de contatos com paginação", summary = "Exibe uma lista de contatos com paginação")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Lista de contatos exibida com sucesso."),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping
 	public ResponseEntity<List<ContatoDTO>> listar(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "size", defaultValue = "5") Integer size) {

@@ -18,6 +18,9 @@ import br.com.srsolution.agenda.dtos.ContatoDTO;
 @Service
 public class ContatoServiceImpl implements ContatoService {
 
+	private static final String CONTATO_COD_NAO_ENCONTRADO = "Contato de código não encontrado";
+	private static final String EMAIL_JA_EXISTENTE = "Já existe um contato registrado com este e-mail";
+
 	@Autowired
 	private ContatoRepository contatoRepository;
 
@@ -27,7 +30,7 @@ public class ContatoServiceImpl implements ContatoService {
 		Contato contatoExistente = this.contatoRepository.findByEmail(contato.getEmail());
 
 		if (contatoExistente != null && !contatoExistente.equals(contato)) {
-			throw new RegraNegocioException("Já existe um contato registrado com este e-mail");
+			throw new RegraNegocioException(EMAIL_JA_EXISTENTE);
 		}
 
 		contatoExistente = this.contatoRepository.save(contato);
@@ -45,7 +48,7 @@ public class ContatoServiceImpl implements ContatoService {
 
 		Optional<Contato> contato = this.contatoRepository.findById(codigo);
 		if (!contato.isPresent()) {
-			throw new EntidadeNaoEncontradaException("Contato de código não encontrado");
+			throw new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO);
 		}
 
 		ContatoDTO contatoDto = ContatoDTO.mapToDto(contato.get());
@@ -72,7 +75,7 @@ public class ContatoServiceImpl implements ContatoService {
 		List<ContatoDTO> contatosPorNome = ContatoDTO
 				.mapToCollectionEntidade(this.contatoRepository.findByNomeContaining(nome));
 		if (contatosPorNome.isEmpty()) {
-			throw new EntidadeNaoEncontradaException("Contato de código não encontrado");
+			throw new EntidadeNaoEncontradaException(String.format("Não foi encontrado um contato com nome %s ", nome));
 		}
 
 		return contatosPorNome;
@@ -87,7 +90,7 @@ public class ContatoServiceImpl implements ContatoService {
 			this.contatoRepository.save(contato.get());
 		});
 
-		contato.orElseThrow(() -> new EntidadeNaoEncontradaException("Contato de código não encontrado"));
+		contato.orElseThrow(() -> new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO));
 	}
 
 	@Override
@@ -99,7 +102,7 @@ public class ContatoServiceImpl implements ContatoService {
 			this.contatoRepository.save(contato.get());
 		});
 
-		contato.orElseThrow(() -> new EntidadeNaoEncontradaException("Contato de código não encontrado"));
+		contato.orElseThrow(() -> new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO));
 
 	}
 
