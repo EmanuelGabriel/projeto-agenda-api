@@ -1,6 +1,7 @@
 package br.com.srsolution.agenda.domain.service.contato;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class ContatoServiceImpl implements ContatoService {
 	@Override
 	public Contato salvar(Contato contato) {
 
-		var contatoExistente = this.contatoRepository.findByEmail(contato.getEmail());
+		Contato contatoExistente = this.contatoRepository.findByEmail(contato.getEmail());
 
 		if (contatoExistente != null && !contatoExistente.equals(contato)) {
 			throw new RegraNegocioException("Já existe um contato registrado com este e-mail");
@@ -42,9 +43,12 @@ public class ContatoServiceImpl implements ContatoService {
 	@Override
 	public ContatoDTO buscarPorCodigo(Long codigo) {
 
-		var contato = this.contatoRepository.findById(codigo)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException("Contato de código não encontrado"));
-		var contatoDto = ContatoDTO.mapToDto(contato);
+		Optional<Contato> contato = this.contatoRepository.findById(codigo);
+		if (!contato.isPresent()) {
+			throw new EntidadeNaoEncontradaException("Contato de código não encontrado");
+		}
+
+		ContatoDTO contatoDto = ContatoDTO.mapToDto(contato.get());
 
 		return contatoDto;
 	}
@@ -65,7 +69,8 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public List<ContatoDTO> buscarPorNome(String nome) {
-		var contatosPorNome = ContatoDTO.mapToCollectionEntidade(this.contatoRepository.findByNomeContaining(nome));
+		List<ContatoDTO> contatosPorNome = ContatoDTO
+				.mapToCollectionEntidade(this.contatoRepository.findByNomeContaining(nome));
 		if (contatosPorNome.isEmpty()) {
 			throw new EntidadeNaoEncontradaException("Contato de código não encontrado");
 		}
@@ -75,7 +80,7 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public void favoritarContato(Long codigo, Boolean favorito) {
-		var contato = this.contatoRepository.findById(codigo);
+		Optional<Contato> contato = this.contatoRepository.findById(codigo);
 		contato.ifPresent(c -> {
 			boolean favoritar = c.getFavorito() == Boolean.TRUE;
 			c.setFavorito(!favoritar);
@@ -87,7 +92,7 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public void favoritar(Long codigo) {
-		var contato = this.contatoRepository.findById(codigo);
+		Optional<Contato> contato = this.contatoRepository.findById(codigo);
 		contato.ifPresent(c -> {
 			boolean favorito = c.getFavorito() == Boolean.TRUE;
 			c.setFavorito(!favorito);

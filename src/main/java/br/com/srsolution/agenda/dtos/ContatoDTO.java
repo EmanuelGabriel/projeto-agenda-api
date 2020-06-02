@@ -28,12 +28,12 @@ public class ContatoDTO {
 	private Boolean favorito;
 
 	public static ContatoDTO mapToDto(Contato contato) {
-		var modelMapper = new ModelMapper();
+		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(contato, ContatoDTO.class);
 	}
 
 	public static Contato mapToEntidade(ContatoDTO contatoDTO) {
-		var modelMapper = new ModelMapper();
+		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(contatoDTO, Contato.class);
 	}
 

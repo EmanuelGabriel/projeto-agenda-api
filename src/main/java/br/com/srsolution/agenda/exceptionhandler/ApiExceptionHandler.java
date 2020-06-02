@@ -2,6 +2,7 @@ package br.com.srsolution.agenda.exceptionhandler;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import br.com.srsolution.agenda.domain.exception.EntidadeNaoEncontradaException;
 import br.com.srsolution.agenda.domain.exception.RegraNegocioException;
+import br.com.srsolution.agenda.exceptionhandler.Problema.Campo;
 
 @RestControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -39,14 +41,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-		var campos = new ArrayList<Problema.Campo>();
+		List<Campo> campos = new ArrayList<Problema.Campo>();
 		for (ObjectError error : ex.getBindingResult().getAllErrors()) {
 			String nome = ((FieldError) error).getField();
 			String mensagem = messageSource.getMessage(error, LocaleContextHolder.getLocale());
 			campos.add(new Problema.Campo(nome, mensagem));
 		}
 
-		var problema = new Problema();
+		Problema problema = new Problema();
 		problema.setStatus(status.value());
 		problema.setTitulo(VALIDACAO_CAMPOS);
 		problema.setDataHora(LocalDateTime.now());
@@ -59,10 +61,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
 			HttpStatus status, WebRequest request) {
 
-		var tipoProblema = TipoProblema.RECURSO_NAO_ENCONTRADO;
-		var detalhe = String.format("O recurso %s, que você tentou acessar, é inexistente.", ex.getRequestURL());
+		TipoProblema tipoProblema = TipoProblema.RECURSO_NAO_ENCONTRADO;
+		String detalhe = String.format("O recurso %s, que você tentou acessar, é inexistente.", ex.getRequestURL());
 
-		var problema = criarProblemaBuilder(status, tipoProblema, detalhe).mensagem(MSG_ERRO_GENERICA_USUARIO_FINAL);
+		ProblemaResponse problema = criarProblemaBuilder(status, tipoProblema, detalhe)
+				.mensagem(MSG_ERRO_GENERICA_USUARIO_FINAL).build();
 
 		return super.handleExceptionInternal(ex, problema, headers, status, request);
 	}
@@ -70,11 +73,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(RegraNegocioException.class)
 	public ResponseEntity<?> handleRegraNegocioException(RegraNegocioException ex, WebRequest request) {
 
-		var status = HttpStatus.BAD_REQUEST;
-		var tipoProblema = TipoProblema.ERRO_NEGOCIO;
-		var detalheErro = ex.getMessage();
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		TipoProblema tipoProblema = TipoProblema.ERRO_NEGOCIO;
+		String detalheErro = ex.getMessage();
 
-		var problema = criarProblemaBuilder(status, tipoProblema).mensagem(detalheErro).build();
+		ProblemaResponse problema = criarProblemaBuilder(status, tipoProblema).mensagem(detalheErro).build();
 
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
@@ -82,11 +85,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> entidadeNaoEncontradaException(EntidadeNaoEncontradaException ex, WebRequest request) {
 
-		var status = HttpStatus.NOT_FOUND;
-		var tipoProblema = TipoProblema.RECURSO_NAO_ENCONTRADO;
-		var detalhe = ex.getMessage();
+		HttpStatus status = HttpStatus.NOT_FOUND;
+		TipoProblema tipoProblema = TipoProblema.RECURSO_NAO_ENCONTRADO;
+		String detalhe = ex.getMessage();
 
-		var problema = criarProblemaBuilder(status, tipoProblema, detalhe).mensagem(detalhe).build();
+		ProblemaResponse problema = criarProblemaBuilder(status, tipoProblema, detalhe).mensagem(detalhe).build();
 
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
@@ -105,15 +108,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	private ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-		var problemType = TipoProblema.PARAMETRO_INVALIDO;
+		TipoProblema problemType = TipoProblema.PARAMETRO_INVALIDO;
 
-		var detail = String.format(
+		String detail = String.format(
 				"O parâmetro de URL '%s' recebeu o valor '%s', "
 						+ "que é de um tipo inválido. Corrija e informe um valor compatível com o tipo %s.",
 				ex.getName(), ex.getValue(), ex.getRequiredType().getSimpleName());
 
-		var problema = criarProblemaBuilder(status, problemType, detail).mensagem(MSG_ERRO_GENERICA_USUARIO_FINAL)
-				.build();
+		ProblemaResponse problema = criarProblemaBuilder(status, problemType, detail)
+				.mensagem(MSG_ERRO_GENERICA_USUARIO_FINAL).build();
 
 		return handleExceptionInternal(ex, problema, headers, status, request);
 	}
@@ -121,11 +124,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public ResponseEntity<?> dataIntegrityException(DataIntegrityViolationException ex, WebRequest request) {
 
-		var status = HttpStatus.CONFLICT;
-		var tipoProblema = TipoProblema.ERRO_INTEGRIDADE_DADOS;
-		var detalhe = ex.getMessage();
+		HttpStatus status = HttpStatus.CONFLICT;
+		TipoProblema tipoProblema = TipoProblema.ERRO_INTEGRIDADE_DADOS;
+		String detalhe = ex.getMessage();
 
-		var problema = criarProblemaBuilder(status, tipoProblema, detalhe).mensagem(detalhe).build();
+		ProblemaResponse problema = criarProblemaBuilder(status, tipoProblema, detalhe).mensagem(detalhe).build();
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problema);
 	}

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.srsolution.agenda.domain.model.Contato;
 import br.com.srsolution.agenda.domain.service.contato.ContatoService;
 import br.com.srsolution.agenda.dtos.ContatoDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +48,7 @@ public class ContatoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<ContatoDTO> criar(@Valid @RequestBody ContatoDTO contatoDTO) {
 
-		var contato = ContatoDTO.mapToEntidade(contatoDTO);
+		Contato contato = ContatoDTO.mapToEntidade(contatoDTO);
 		ContatoDTO.mapToDto(this.contatoService.salvar(contato));
 		URI location = getUri(contato.getCodigo());
 		return ResponseEntity.created(location).build();
@@ -57,19 +58,19 @@ public class ContatoController {
 	@GetMapping
 	public ResponseEntity<List<ContatoDTO>> listar(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "size", defaultValue = "5") Integer size) {
-		var contatos = this.contatoService.lista(PageRequest.of(page, size, Sort.by("nome")));
+		List<ContatoDTO> contatos = this.contatoService.lista(PageRequest.of(page, size, Sort.by("nome")));
 		return ResponseEntity.ok(contatos);
 	}
 
 	@GetMapping("{codigo}")
 	public ResponseEntity<ContatoDTO> buscarPorCodigo(@PathVariable Long codigo) {
-		var contato = this.contatoService.buscarPorCodigo(codigo);
+		ContatoDTO contato = this.contatoService.buscarPorCodigo(codigo);
 		return contato != null ? ResponseEntity.ok(contato) : ResponseEntity.notFound().build();
 	}
 
 	@GetMapping("por-nome")
 	public ResponseEntity<List<ContatoDTO>> buscarPorNome(String nome) {
-		var contatoPorNome = this.contatoService.buscarPorNome(nome);
+		List<ContatoDTO> contatoPorNome = this.contatoService.buscarPorNome(nome);
 		return contatoPorNome != null ? ResponseEntity.ok(contatoPorNome) : ResponseEntity.notFound().build();
 	}
 
