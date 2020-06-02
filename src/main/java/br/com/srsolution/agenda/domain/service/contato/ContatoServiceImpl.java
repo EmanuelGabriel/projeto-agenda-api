@@ -2,10 +2,10 @@ package br.com.srsolution.agenda.domain.service.contato;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +39,8 @@ public class ContatoServiceImpl implements ContatoService {
 	}
 
 	@Override
-	public List<ContatoDTO> lista(Pageable pageable) {
-		return this.contatoRepository.findAll(pageable).stream().map(ContatoDTO::mapToDto).collect(Collectors.toList());
+	public Page<Contato> lista(Pageable pageable) {
+		return this.contatoRepository.findAll(pageable);
 	}
 
 	@Override
@@ -82,18 +82,6 @@ public class ContatoServiceImpl implements ContatoService {
 	}
 
 	@Override
-	public void favoritarContato(Long codigo, Boolean favorito) {
-		Optional<Contato> contato = this.contatoRepository.findById(codigo);
-		contato.ifPresent(c -> {
-			boolean favoritar = c.getFavorito() == Boolean.TRUE;
-			c.setFavorito(!favoritar);
-			this.contatoRepository.save(contato.get());
-		});
-
-		contato.orElseThrow(() -> new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO));
-	}
-
-	@Override
 	public void favoritar(Long codigo) {
 		Optional<Contato> contato = this.contatoRepository.findById(codigo);
 		contato.ifPresent(c -> {
@@ -104,6 +92,15 @@ public class ContatoServiceImpl implements ContatoService {
 
 		contato.orElseThrow(() -> new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO));
 
+	}
+
+	@Override
+	public Contato atualizar(Long codigo, Contato contato) {
+		buscarPorCodigo(codigo);
+
+		contato.setCodigo(codigo);
+		contato = this.contatoRepository.save(contato);
+		return contato;
 	}
 
 }

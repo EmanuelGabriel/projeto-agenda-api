@@ -1,7 +1,7 @@
 package br.com.srsolution.agenda.exceptionhandler;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,7 +24,7 @@ public class ProblemaResponse implements Serializable {
 	private Integer status;
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	@DateTimeFormat(iso = ISO.TIME)
-	private LocalDateTime timestamp;
+	private OffsetDateTime timestamp;
 	private String tipo;
 	private String titulo;
 	private String detalhe;

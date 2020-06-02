@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.modelmapper.ModelMapper;
 
@@ -17,22 +17,25 @@ import lombok.Setter;
 @Setter
 public class ContatoDTO {
 
-	@NotNull
+	@NotBlank
+	@Size(min = 5, max = 90)
 	private String nome;
 
 	@Email
-	@NotNull
+	@NotBlank
 	private String email;
 
-	@NotBlank
 	private Boolean favorito;
+
+	@NotBlank
+	private String telefone;
 
 	public static ContatoDTO mapToDto(Contato contato) {
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(contato, ContatoDTO.class);
 	}
 
-	public static Contato mapToEntidade(ContatoDTO contatoDTO) {
+	public static Contato mapToModel(ContatoDTO contatoDTO) {
 		ModelMapper modelMapper = new ModelMapper();
 		return modelMapper.map(contatoDTO, Contato.class);
 	}

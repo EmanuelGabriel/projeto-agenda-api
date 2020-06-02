@@ -1,6 +1,6 @@
 package br.com.srsolution.agenda.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -26,7 +26,7 @@ import br.com.srsolution.agenda.domain.exception.EntidadeNaoEncontradaException;
 import br.com.srsolution.agenda.domain.exception.RegraNegocioException;
 import br.com.srsolution.agenda.exceptionhandler.Problema.Campo;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Autowired
@@ -51,7 +51,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		Problema problema = new Problema();
 		problema.setStatus(status.value());
 		problema.setTitulo(VALIDACAO_CAMPOS);
-		problema.setDataHora(LocalDateTime.now());
+		problema.setDataHora(OffsetDateTime.now());
 		problema.setCampos(campos);
 
 		return super.handleExceptionInternal(ex, problema, headers, status, request);
@@ -138,10 +138,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpStatus status, WebRequest request) {
 
 		if (body == null) {
-			body = ProblemaResponse.builder().timestamp(LocalDateTime.now()).titulo(status.getReasonPhrase())
+			body = ProblemaResponse.builder().timestamp(OffsetDateTime.now()).titulo(status.getReasonPhrase())
 					.status(status.value()).mensagem(MSG_ERRO_GENERICA_USUARIO_FINAL).build();
 		} else if (body instanceof String) {
-			body = ProblemaResponse.builder().timestamp(LocalDateTime.now()).titulo((String) body)
+			body = ProblemaResponse.builder().timestamp(OffsetDateTime.now()).titulo((String) body)
 					.status(status.value()).mensagem(MSG_ERRO_GENERICA_USUARIO_FINAL).build();
 		}
 
@@ -151,14 +151,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	private ProblemaResponse.ProblemaResponseBuilder criarProblemaBuilder(HttpStatus status,
 			TipoProblema tipoProblema) {
 
-		return ProblemaResponse.builder().timestamp(LocalDateTime.now()).status(status.value())
+		return ProblemaResponse.builder().timestamp(OffsetDateTime.now()).status(status.value())
 				.tipo(tipoProblema.getUri()).titulo(tipoProblema.getTitulo());
 	}
 
 	private ProblemaResponse.ProblemaResponseBuilder criarProblemaBuilder(HttpStatus status, TipoProblema tipoProblema,
 			String detalhe) {
 
-		return ProblemaResponse.builder().timestamp(LocalDateTime.now()).status(status.value())
+		return ProblemaResponse.builder().timestamp(OffsetDateTime.now()).status(status.value())
 				.tipo(tipoProblema.getUri()).titulo(tipoProblema.getTitulo()).detalhe(detalhe);
 	}
 
