@@ -14,4 +14,6 @@ public interface ContatoRepository extends JpaRepository<Contato, Long> {
 
 	List<Contato> findByNomeContaining(String nome);
 
+	List<Contato> findByTelefone(String telefone);
+
 }

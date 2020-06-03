@@ -82,6 +82,16 @@ public class ContatoServiceImpl implements ContatoService {
 	}
 
 	@Override
+	public List<ContatoDTO> buscarPorTelefone(String telefone) {
+		List<ContatoDTO> contatoPorNome = ContatoDTO
+				.mapToCollectionEntidade(this.contatoRepository.findByTelefone(telefone));
+		if (contatoPorNome.isEmpty()) {
+			throw new EntidadeNaoEncontradaException("Não foi encontrado um contato com este telefone");
+		}
+		return contatoPorNome;
+	}
+
+	@Override
 	public void favoritar(Long codigo) {
 		Optional<Contato> contato = this.contatoRepository.findById(codigo);
 		contato.ifPresent(c -> {

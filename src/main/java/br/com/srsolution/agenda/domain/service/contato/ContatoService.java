@@ -17,7 +17,9 @@ public interface ContatoService {
 	ContatoDTO buscarPorCodigo(Long codigo);
 
 	List<ContatoDTO> buscarPorNome(String nome);
-	
+
+	List<ContatoDTO> buscarPorTelefone(String telefone);
+
 	Contato atualizar(Long codigo, Contato contato);
 
 	void excluir(Long codigo);

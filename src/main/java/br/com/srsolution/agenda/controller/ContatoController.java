@@ -88,6 +88,17 @@ public class ContatoController {
 		return contatoPorNome != null ? ResponseEntity.ok(contatoPorNome) : ResponseEntity.notFound().build();
 	}
 
+	@Operation(description = "Busca um contato por seu telefone", summary = "Busca um contato por seu telefone")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Realiza a busca de contato por seu telefone"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este número"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@GetMapping("por-telefone")
+	public ResponseEntity<List<ContatoDTO>> buscarPorTelefone(@RequestParam("telefone") String telefone) {
+		List<ContatoDTO> contatoPorTelefone = this.contatoService.buscarPorTelefone(telefone);
+		return contatoPorTelefone != null ? ResponseEntity.ok(contatoPorTelefone) : ResponseEntity.notFound().build();
+	}
+
 	@Operation(description = "Favorita um contato por seu código", summary = "Favorita um contato por seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Contato favoritado com sucesso"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este código"),
