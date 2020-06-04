@@ -9,6 +9,7 @@ br/com/srsolution/agenda/exceptionhandler/Problema.class
 br/com/srsolution/agenda/domain/exception/EntidadeNaoEncontradaException.class
 br/com/srsolution/agenda/AgendaApiApplication.class
 br/com/srsolution/agenda/domain/model/Contato.class
+br/com/srsolution/agenda/core/CorsFilter.class
 br/com/srsolution/agenda/domain/service/contato/ContatoServiceImpl.class
 br/com/srsolution/agenda/exceptionhandler/ProblemaResponse$ProblemaResponseBuilder.class
 br/com/srsolution/agenda/exceptionhandler/ProblemaResponse$Campos.class

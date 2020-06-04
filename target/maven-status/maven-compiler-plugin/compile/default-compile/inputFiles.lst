@@ -9,6 +9,7 @@
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/domain/model/Contato.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/domain/repository/ContatoRepository.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/exceptionhandler/Problema.java
+/home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/core/CorsFilter.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/domain/exception/EntidadeNaoEncontradaException.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/core/ConfigSwagger.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/exceptionhandler/ApiExceptionHandler.java
