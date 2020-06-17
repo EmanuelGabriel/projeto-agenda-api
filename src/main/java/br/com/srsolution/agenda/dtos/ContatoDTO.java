@@ -1,10 +1,12 @@
 package br.com.srsolution.agenda.dtos;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.modelmapper.ModelMapper;
@@ -15,7 +17,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ContatoDTO {
+public class ContatoDTO implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@NotBlank
 	@Size(min = 5, max = 90)
@@ -25,7 +29,8 @@ public class ContatoDTO {
 	@NotBlank
 	private String email;
 
-	private Boolean favorito;
+	@NotNull
+	private boolean favorito;
 
 	@NotBlank
 	private String telefone;
@@ -41,7 +46,7 @@ public class ContatoDTO {
 	}
 
 	public static List<ContatoDTO> mapToCollectionEntidade(List<Contato> contatos) {
-		return contatos.stream().map(cont -> mapToDto(cont)).collect(Collectors.toList());
+		return contatos.stream().map(contato -> mapToDto(contato)).collect(Collectors.toList());
 	}
 
 }

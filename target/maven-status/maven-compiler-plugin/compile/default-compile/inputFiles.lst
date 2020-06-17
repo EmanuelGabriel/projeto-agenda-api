@@ -1,11 +1,13 @@
+/home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/api/modelmapper/ContatoModelMapper.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/domain/service/contato/ContatoServiceImpl.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/domain/service/contato/ContatoService.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/dtos/ContatoDTO.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/domain/exception/RegraNegocioException.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/AgendaApiApplication.java
-/home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/controller/ContatoController.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/exceptionhandler/TipoProblema.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/core/ModelMapperConfig.java
+/home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/dtos/ContatoInputDTO.java
+/home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/api/controller/ContatoController.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/domain/model/Contato.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/domain/repository/ContatoRepository.java
 /home/samuel/Documentos/Desenvolvimento/Workspace/STS/agenda-api/src/main/java/br/com/srsolution/agenda/exceptionhandler/Problema.java

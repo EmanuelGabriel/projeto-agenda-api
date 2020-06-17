@@ -33,9 +33,9 @@ public class ContatoServiceImpl implements ContatoService {
 			throw new RegraNegocioException(EMAIL_JA_EXISTENTE);
 		}
 
-		contatoExistente = this.contatoRepository.save(contato);
+		contato.setFavorito(contato.isFavorito());
 
-		return contatoExistente;
+		return this.contatoRepository.save(contato);
 	}
 
 	@Override
@@ -57,25 +57,11 @@ public class ContatoServiceImpl implements ContatoService {
 	}
 
 	@Override
-	public void excluir(Long codigo) {
-
-		try {
-
-			buscarPorCodigo(codigo);
-			this.contatoRepository.deleteById(codigo);
-
-		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityViolationException("Contato não pode ser removido, pois está em uso");
-		}
-
-	}
-
-	@Override
 	public List<ContatoDTO> buscarPorNome(String nome) {
 		List<ContatoDTO> contatosPorNome = ContatoDTO
 				.mapToCollectionEntidade(this.contatoRepository.findByNomeContaining(nome));
 		if (contatosPorNome.isEmpty()) {
-			throw new EntidadeNaoEncontradaException(String.format("Não foi encontrado um contato com nome %s ", nome));
+			throw new EntidadeNaoEncontradaException("Não foi encontrado um contato com este nome");
 		}
 
 		return contatosPorNome;
@@ -95,7 +81,7 @@ public class ContatoServiceImpl implements ContatoService {
 	public void favoritar(Long codigo) {
 		Optional<Contato> contato = this.contatoRepository.findById(codigo);
 		contato.ifPresent(c -> {
-			boolean favorito = c.getFavorito() == Boolean.TRUE;
+			boolean favorito = c.isFavorito() == Boolean.TRUE;
 			c.setFavorito(!favorito);
 			this.contatoRepository.save(contato.get());
 		});
@@ -106,11 +92,41 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public Contato atualizar(Long codigo, Contato contato) {
-		buscarPorCodigo(codigo);
+
+		Optional<Contato> updateContato = this.contatoRepository.findById(codigo);
+		if (!updateContato.isPresent()) {
+			throw new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO);
+		}
 
 		contato.setCodigo(codigo);
+		// contato.setFavorito(!contato.isFavorito());
 		contato = this.contatoRepository.save(contato);
+
 		return contato;
 	}
 
+	@Override
+	public Contato update(Long codigo, ContatoDTO contatoDTO) {
+
+		buscarPorCodigo(codigo);
+		Contato contato = ContatoDTO.mapToModel(contatoDTO);
+		contato.setCodigo(codigo);
+		this.contatoRepository.save(contato);
+		return contato;
+
+	}
+
+	@Override
+	public void excluir(Long codigo) {
+
+		try {
+
+			buscarPorCodigo(codigo);
+			this.contatoRepository.deleteById(codigo);
+
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException("Contato não pode ser removido, pois está em uso");
+		}
+
+	}
 }
