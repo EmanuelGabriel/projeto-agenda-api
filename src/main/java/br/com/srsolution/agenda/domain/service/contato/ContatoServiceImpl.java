@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.com.srsolution.agenda.api.modelmapper.ContatoModelMapper;
 import br.com.srsolution.agenda.domain.exception.EntidadeNaoEncontradaException;
 import br.com.srsolution.agenda.domain.exception.RegraNegocioException;
 import br.com.srsolution.agenda.domain.model.Contato;
@@ -22,6 +23,9 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Autowired
 	private ContatoRepository contatoRepository;
+
+	@Autowired
+	private ContatoModelMapper modelMapper;
 
 	@Override
 	public Contato salvar(Contato contato) {
@@ -50,14 +54,14 @@ public class ContatoServiceImpl implements ContatoService {
 			throw new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO);
 		}
 
-		var contatoDto = ContatoDTO.mapToDto(contato.get());
+		var contatoDto = this.modelMapper.toModel(contato.get()); // ContatoDTO.mapToDto(contato.get());
 
 		return contatoDto;
 	}
 
 	@Override
 	public List<ContatoDTO> buscarPorNome(String nome) {
-		var contatosPorNome = ContatoDTO.mapToCollectionEntidade(this.contatoRepository.findByNomeContaining(nome));
+		var contatosPorNome = this.modelMapper.toCollectionModel(this.contatoRepository.findByNomeContaining(nome));
 		if (contatosPorNome.isEmpty()) {
 			throw new EntidadeNaoEncontradaException("Não foi encontrado um contato com este nome");
 		}
@@ -67,7 +71,7 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public List<ContatoDTO> buscarPorTelefone(String telefone) {
-		var contatoPorNome = ContatoDTO.mapToCollectionEntidade(this.contatoRepository.findByTelefone(telefone));
+		var contatoPorNome = this.modelMapper.toCollectionModel(this.contatoRepository.findByTelefone(telefone));
 		if (contatoPorNome.isEmpty()) {
 			throw new EntidadeNaoEncontradaException("Não foi encontrado um contato com este telefone");
 		}
