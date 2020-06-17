@@ -1,7 +1,6 @@
 package br.com.srsolution.agenda.domain.service.contato;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,7 +26,7 @@ public class ContatoServiceImpl implements ContatoService {
 	@Override
 	public Contato salvar(Contato contato) {
 
-		Contato contatoExistente = this.contatoRepository.findByEmail(contato.getEmail());
+		var contatoExistente = this.contatoRepository.findByEmail(contato.getEmail());
 
 		if (contatoExistente != null && !contatoExistente.equals(contato)) {
 			throw new RegraNegocioException(EMAIL_JA_EXISTENTE);
@@ -46,20 +45,19 @@ public class ContatoServiceImpl implements ContatoService {
 	@Override
 	public ContatoDTO buscarPorCodigo(Long codigo) {
 
-		Optional<Contato> contato = this.contatoRepository.findById(codigo);
+		var contato = this.contatoRepository.findById(codigo);
 		if (!contato.isPresent()) {
 			throw new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO);
 		}
 
-		ContatoDTO contatoDto = ContatoDTO.mapToDto(contato.get());
+		var contatoDto = ContatoDTO.mapToDto(contato.get());
 
 		return contatoDto;
 	}
 
 	@Override
 	public List<ContatoDTO> buscarPorNome(String nome) {
-		List<ContatoDTO> contatosPorNome = ContatoDTO
-				.mapToCollectionEntidade(this.contatoRepository.findByNomeContaining(nome));
+		var contatosPorNome = ContatoDTO.mapToCollectionEntidade(this.contatoRepository.findByNomeContaining(nome));
 		if (contatosPorNome.isEmpty()) {
 			throw new EntidadeNaoEncontradaException("Não foi encontrado um contato com este nome");
 		}
@@ -69,8 +67,7 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public List<ContatoDTO> buscarPorTelefone(String telefone) {
-		List<ContatoDTO> contatoPorNome = ContatoDTO
-				.mapToCollectionEntidade(this.contatoRepository.findByTelefone(telefone));
+		var contatoPorNome = ContatoDTO.mapToCollectionEntidade(this.contatoRepository.findByTelefone(telefone));
 		if (contatoPorNome.isEmpty()) {
 			throw new EntidadeNaoEncontradaException("Não foi encontrado um contato com este telefone");
 		}
@@ -79,7 +76,7 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public void favoritar(Long codigo) {
-		Optional<Contato> contato = this.contatoRepository.findById(codigo);
+		var contato = this.contatoRepository.findById(codigo);
 		contato.ifPresent(c -> {
 			boolean favorito = c.getFavorito() == Boolean.TRUE;
 			c.setFavorito(!favorito);
@@ -93,27 +90,11 @@ public class ContatoServiceImpl implements ContatoService {
 	@Override
 	public Contato atualizar(Long codigo, Contato contato) {
 
-		Optional<Contato> updateContato = this.contatoRepository.findById(codigo);
-		if (!updateContato.isPresent()) {
-			throw new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO);
-		}
-
+		buscarPorCodigo(codigo);
 		contato.setCodigo(codigo);
-		// contato.setFavorito(!contato.isFavorito());
 		contato = this.contatoRepository.save(contato);
 
 		return contato;
-	}
-
-	@Override
-	public Contato update(Long codigo, ContatoDTO contatoDTO) {
-
-		buscarPorCodigo(codigo);
-		Contato contato = ContatoDTO.mapToModel(contatoDTO);
-		contato.setCodigo(codigo);
-		this.contatoRepository.save(contato);
-		return contato;
-
 	}
 
 	@Override

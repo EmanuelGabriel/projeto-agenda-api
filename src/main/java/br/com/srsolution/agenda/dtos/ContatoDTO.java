@@ -30,7 +30,7 @@ public class ContatoDTO implements Serializable {
 	private String email;
 
 	@NotNull
-	private boolean favorito;
+	private Boolean favorito;
 
 	@NotBlank
 	private String telefone;

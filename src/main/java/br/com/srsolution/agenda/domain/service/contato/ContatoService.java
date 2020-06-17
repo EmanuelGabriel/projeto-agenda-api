@@ -22,8 +22,6 @@ public interface ContatoService {
 
 	Contato atualizar(Long codigo, Contato contato);
 
-	Contato update(Long codigo, ContatoDTO contatoDTO);
-
 	void excluir(Long codigo);
 
 	void favoritar(Long codigo);
