@@ -39,7 +39,7 @@ public class CorsFilter implements Filter {
 		response.setHeader(CONTROL_ACCESS_CREDENTIALS, "true");
 
 		if ("OPTIONS".equals(request.getMethod()) && ORIGIN_PERMITIDA.equals(request.getHeader("Origin"))) {
-			response.setHeader(ACCESS_CONTROL_ALLOW_METHODS, "POST, GET, DELETE, PUT, OPTIONS");
+			response.setHeader(ACCESS_CONTROL_ALLOW_METHODS, "POST, GET, DELETE, PUT, PATCH,OPTIONS");
 			response.setHeader(ACCESS_CONTROL_ALLOW_HEADERS, "Authorization, Content-Type, Accept");
 			response.setHeader(ACCESS_CONTROL_MAX_AGE, "3600"); // Cache de 1h
 
