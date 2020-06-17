@@ -54,7 +54,7 @@ public class ContatoServiceImpl implements ContatoService {
 			throw new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO);
 		}
 
-		var contatoDto = this.modelMapper.toModel(contato.get()); // ContatoDTO.mapToDto(contato.get());
+		var contatoDto = this.modelMapper.toModel(contato.get());
 
 		return contatoDto;
 	}
