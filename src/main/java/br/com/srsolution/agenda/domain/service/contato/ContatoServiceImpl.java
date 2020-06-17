@@ -33,7 +33,7 @@ public class ContatoServiceImpl implements ContatoService {
 			throw new RegraNegocioException(EMAIL_JA_EXISTENTE);
 		}
 
-		contato.setFavorito(contato.isFavorito());
+		contato.setFavorito(contato.getFavorito() == Boolean.FALSE);
 
 		return this.contatoRepository.save(contato);
 	}
@@ -81,7 +81,7 @@ public class ContatoServiceImpl implements ContatoService {
 	public void favoritar(Long codigo) {
 		Optional<Contato> contato = this.contatoRepository.findById(codigo);
 		contato.ifPresent(c -> {
-			boolean favorito = c.isFavorito() == Boolean.TRUE;
+			boolean favorito = c.getFavorito() == Boolean.TRUE;
 			c.setFavorito(!favorito);
 			this.contatoRepository.save(contato.get());
 		});
