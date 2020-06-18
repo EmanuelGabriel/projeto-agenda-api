@@ -1,4 +1,4 @@
-package br.com.srsolution.agenda.dtos;
+package br.com.srsolution.agenda.api.dtos;
 
 import java.io.Serializable;
 
@@ -8,13 +8,12 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import lombok.Setter;
-
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-public class ClienteDTO implements Serializable {
+public class ClienteInputDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,7 +28,5 @@ public class ClienteDTO implements Serializable {
 	@CPF
 	@NotBlank
 	private String cpf;
-
-	private Boolean ativo;
 
 }

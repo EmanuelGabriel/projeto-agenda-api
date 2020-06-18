@@ -24,11 +24,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.srsolution.agenda.api.dtos.ContatoDTO;
+import br.com.srsolution.agenda.api.dtos.ContatoInputDTO;
 import br.com.srsolution.agenda.api.modelmapper.ContatoModelMapper;
 import br.com.srsolution.agenda.domain.model.Contato;
 import br.com.srsolution.agenda.domain.service.contato.ContatoService;
-import br.com.srsolution.agenda.dtos.ContatoDTO;
-import br.com.srsolution.agenda.dtos.ContatoInputDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

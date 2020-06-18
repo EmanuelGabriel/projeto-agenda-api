@@ -8,9 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.srsolution.agenda.api.dtos.ContatoDTO;
+import br.com.srsolution.agenda.api.dtos.ContatoInputDTO;
 import br.com.srsolution.agenda.domain.model.Contato;
-import br.com.srsolution.agenda.dtos.ContatoDTO;
-import br.com.srsolution.agenda.dtos.ContatoInputDTO;
 import lombok.RequiredArgsConstructor;
 
 @Component

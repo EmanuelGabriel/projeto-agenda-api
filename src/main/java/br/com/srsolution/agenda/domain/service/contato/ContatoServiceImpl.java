@@ -8,12 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.com.srsolution.agenda.api.dtos.ContatoDTO;
 import br.com.srsolution.agenda.api.modelmapper.ContatoModelMapper;
 import br.com.srsolution.agenda.domain.exception.EntidadeNaoEncontradaException;
 import br.com.srsolution.agenda.domain.exception.RegraNegocioException;
 import br.com.srsolution.agenda.domain.model.Contato;
 import br.com.srsolution.agenda.domain.repository.ContatoRepository;
-import br.com.srsolution.agenda.dtos.ContatoDTO;
 
 @Service
 public class ContatoServiceImpl implements ContatoService {

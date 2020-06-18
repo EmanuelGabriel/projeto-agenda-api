@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import br.com.srsolution.agenda.api.dtos.ContatoDTO;
 import br.com.srsolution.agenda.domain.model.Contato;
-import br.com.srsolution.agenda.dtos.ContatoDTO;
 
 public interface ContatoService {
 

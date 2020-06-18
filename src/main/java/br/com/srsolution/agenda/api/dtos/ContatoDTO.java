@@ -1,4 +1,4 @@
-package br.com.srsolution.agenda.dtos;
+package br.com.srsolution.agenda.api.dtos;
 
 import java.io.Serializable;
 

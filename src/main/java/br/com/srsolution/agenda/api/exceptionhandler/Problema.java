@@ -1,4 +1,4 @@
-package br.com.srsolution.agenda.exceptionhandler;
+package br.com.srsolution.agenda.api.exceptionhandler;
 
 import java.time.OffsetDateTime;
 import java.util.List;

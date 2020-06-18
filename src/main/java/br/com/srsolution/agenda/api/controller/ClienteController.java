@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +20,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.srsolution.agenda.api.dtos.ClienteDTO;
+import br.com.srsolution.agenda.api.dtos.ClienteInputDTO;
 import br.com.srsolution.agenda.api.modelmapper.ClienteModelMapper;
 import br.com.srsolution.agenda.domain.model.Cliente;
 import br.com.srsolution.agenda.domain.service.cliente.ClienteService;
-import br.com.srsolution.agenda.dtos.ClienteDTO;
-import br.com.srsolution.agenda.dtos.ClienteInputDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -57,9 +58,20 @@ public class ClienteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<ClienteDTO> criar(@Valid @RequestBody ClienteInputDTO clienteInputDTO) {
 		Cliente cliente = this.modelMapper.toDto(clienteInputDTO);
-		this.clienteService.salvar(cliente);
+		// this.clienteService.salvar(cliente);
+		this.modelMapper.toModel(this.clienteService.salvar(cliente));
 		URI location = getUri(cliente.getCodigo());
 		return ResponseEntity.created(location).build();
+	}
+
+	@Operation(description = "Busca um cliente por seu código ou id", summary = "Busca um cliente por seu código ou id")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado por seu código"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@GetMapping("{codigo}")
+	public ResponseEntity<ClienteDTO> buscarPorCodigo(@PathVariable Long codigo) {
+		var cliente = this.modelMapper.toModel(this.clienteService.buscarPorCodigo(codigo));
+		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
 	}
 
 	private URI getUri(Long codigo) {

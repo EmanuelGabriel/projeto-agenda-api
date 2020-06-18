@@ -8,11 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.com.srsolution.agenda.api.dtos.ClienteDTO;
 import br.com.srsolution.agenda.api.modelmapper.ClienteModelMapper;
+import br.com.srsolution.agenda.domain.exception.EntidadeNaoEncontradaException;
 import br.com.srsolution.agenda.domain.exception.RegraNegocioException;
 import br.com.srsolution.agenda.domain.model.Cliente;
 import br.com.srsolution.agenda.domain.repository.ClienteRepository;
-import br.com.srsolution.agenda.dtos.ClienteDTO;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -50,6 +51,16 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Override
 	public void excluir(Long codigo) {
+		this.clienteRepository.findById(codigo).map(cliente -> {
+			this.clienteRepository.delete(cliente);
+			return Void.TYPE;
+		}).orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
 
+	}
+
+	@Override
+	public Cliente buscarPorCodigo(Long codigo) {
+		return this.clienteRepository.findById(codigo)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
 	}
 }

@@ -11,6 +11,8 @@ public interface ClienteService {
 
 	Page<Cliente> listarTodos(Pageable pageable);
 
+	Cliente buscarPorCodigo(Long codigo);
+
 	void excluir(Long codigo);
 
 }
