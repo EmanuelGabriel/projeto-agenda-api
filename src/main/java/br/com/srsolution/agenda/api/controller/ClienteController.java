@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,7 +60,6 @@ public class ClienteController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<ClienteDTO> criar(@Valid @RequestBody ClienteInputDTO clienteInputDTO) {
 		var cliente = this.modelMapper.toDto(clienteInputDTO);
-		// this.clienteService.salvar(cliente);
 		this.modelMapper.toModel(this.clienteService.salvar(cliente));
 		URI location = getUri(cliente.getCodigo());
 		return ResponseEntity.created(location).build();
@@ -75,6 +75,17 @@ public class ClienteController {
 		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
 	}
 
+	@Operation(description = "Realiza a busca de um cliente por seu CPF", summary = "Realiza a busca de um cliente por seu CPF")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado por seu CPF"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este CPF"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@GetMapping("por-cpf")
+	public ResponseEntity<ClienteDTO> buscarPorCpf(@RequestParam String cpf) {
+		var cliente = this.clienteService.buscarPorCpf(cpf);
+		this.modelMapper.toDto(cliente);
+		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
+	}
+
 	@Operation(description = "Remove um cliente por seu código", summary = "Remove um cliente por seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso."),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado um cliente com este código."),
@@ -83,7 +94,19 @@ public class ClienteController {
 	public ResponseEntity<Void> remover(@PathVariable Long codigo) {
 		this.clienteService.excluir(codigo);
 		return ResponseEntity.noContent().build();
+	}
 
+	@Operation(description = "Realiza a atualização de um cliente por seu código", summary = "Realiza a atualização de um cliente por seu código")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Cliente atualizado por seu código já existente"),
+			@ApiResponse(responseCode = "404", description = "Não há cliente cadastrado com este código"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@PutMapping("{codigo}")
+	public ResponseEntity<ClienteDTO> atualizar(@PathVariable Long codigo,
+			@Valid @RequestBody ClienteInputDTO clienteInputDTO) {
+		var cliente = this.modelMapper.toDto(clienteInputDTO);
+		this.clienteService.atualizar(codigo, cliente);
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	private URI getUri(Long codigo) {

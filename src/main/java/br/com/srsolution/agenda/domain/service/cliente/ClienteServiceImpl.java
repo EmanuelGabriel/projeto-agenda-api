@@ -20,6 +20,7 @@ public class ClienteServiceImpl implements ClienteService {
 
 	private static final String CLIENTE_COD_NAO_ENCONTRADO = "Cliente de código não encontrado";
 	private static final String CLIENTE_CPF_EXISTENTE = "Já existe um cliente registrado com este CPF";
+	private static final String CLIENTE_CPF_NAO_ENCONTRADO = "Não foi encontrado cliente registrado com este CPF";
 
 	@Autowired
 	private ClienteRepository clienteRepository;
@@ -40,13 +41,42 @@ public class ClienteServiceImpl implements ClienteService {
 	public Cliente salvar(Cliente cliente) {
 
 		var clienteExistente = this.clienteRepository.findByCpf(cliente.getCpf());
+
 		if (clienteExistente != null && !clienteExistente.equals(cliente)) {
 			throw new RegraNegocioException(CLIENTE_CPF_EXISTENTE);
 		}
 
 		cliente.setAtivo(Boolean.FALSE);
 		cliente.setDataCadastro(LocalDateTime.now());
+
 		return this.clienteRepository.save(cliente);
+
+	}
+
+	@Override
+	public Cliente buscarPorCodigo(Long codigo) {
+		return this.clienteRepository.findById(codigo)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
+	}
+
+	@Override
+	public ClienteDTO buscarPorCpf(String cpf) {
+		var cliente = this.clienteRepository.findByCpf(cpf);
+		if (cliente == null) {
+			throw new EntidadeNaoEncontradaException(CLIENTE_CPF_NAO_ENCONTRADO);
+		}
+		var cli = this.modelMapper.toModel(cliente);
+		return cli;
+	}
+
+	@Override
+	public Cliente atualizar(Long codigo, Cliente cliente) {
+		return this.clienteRepository.findById(codigo).map(cli -> {
+			cli.setNome(cliente.getNome());
+			// cli.setCpf(cliente.getCpf());
+			cli.setEmail(cliente.getEmail());
+			return this.clienteRepository.save(cli);
+		}).orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
 	}
 
 	@Override
@@ -58,9 +88,4 @@ public class ClienteServiceImpl implements ClienteService {
 
 	}
 
-	@Override
-	public Cliente buscarPorCodigo(Long codigo) {
-		return this.clienteRepository.findById(codigo)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
-	}
 }
