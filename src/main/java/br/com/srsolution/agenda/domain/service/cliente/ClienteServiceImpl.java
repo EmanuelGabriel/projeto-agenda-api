@@ -65,15 +65,14 @@ public class ClienteServiceImpl implements ClienteService {
 		if (cliente == null) {
 			throw new EntidadeNaoEncontradaException(CLIENTE_CPF_NAO_ENCONTRADO);
 		}
-		var cli = this.modelMapper.toModel(cliente);
-		return cli;
+		var clienteDto = this.modelMapper.toModel(cliente);
+		return clienteDto;
 	}
 
 	@Override
 	public Cliente atualizar(Long codigo, Cliente cliente) {
 		return this.clienteRepository.findById(codigo).map(cli -> {
 			cli.setNome(cliente.getNome());
-			// cli.setCpf(cliente.getCpf());
 			cli.setEmail(cliente.getEmail());
 			return this.clienteRepository.save(cli);
 		}).orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));

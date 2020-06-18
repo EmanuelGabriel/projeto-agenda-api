@@ -82,7 +82,6 @@ public class ClienteController {
 	@GetMapping("por-cpf")
 	public ResponseEntity<ClienteDTO> buscarPorCpf(@RequestParam String cpf) {
 		var cliente = this.clienteService.buscarPorCpf(cpf);
-		this.modelMapper.toDto(cliente);
 		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
 	}
 
