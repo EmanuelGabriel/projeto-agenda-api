@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Recurso de Clientes", description = "Endpoints de clientes")
+@Tag(name = "Recurso de Clientes", description = "Endpoints de Cliente")
 @RestController
 @RequestMapping(value = "/v1/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -47,7 +48,7 @@ public class ClienteController {
 	@GetMapping
 	public ResponseEntity<Page<Cliente>> listar(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "size", defaultValue = "5") Integer size) {
-		Page<Cliente> clientes = this.clienteService.listarTodos(PageRequest.of(page, size, Sort.by("codigo")));
+		var clientes = this.clienteService.listarTodos(PageRequest.of(page, size, Sort.by("codigo")));
 		return clientes != null ? ResponseEntity.ok(clientes) : ResponseEntity.notFound().build();
 	}
 
@@ -57,7 +58,7 @@ public class ClienteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<ClienteDTO> criar(@Valid @RequestBody ClienteInputDTO clienteInputDTO) {
-		Cliente cliente = this.modelMapper.toDto(clienteInputDTO);
+		var cliente = this.modelMapper.toDto(clienteInputDTO);
 		// this.clienteService.salvar(cliente);
 		this.modelMapper.toModel(this.clienteService.salvar(cliente));
 		URI location = getUri(cliente.getCodigo());
@@ -72,6 +73,17 @@ public class ClienteController {
 	public ResponseEntity<ClienteDTO> buscarPorCodigo(@PathVariable Long codigo) {
 		var cliente = this.modelMapper.toModel(this.clienteService.buscarPorCodigo(codigo));
 		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
+	}
+
+	@Operation(description = "Remove um cliente por seu código", summary = "Remove um cliente por seu código")
+	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso."),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado um cliente com este código."),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto.") })
+	@DeleteMapping("{codigo}")
+	public ResponseEntity<Void> remover(@PathVariable Long codigo) {
+		this.clienteService.excluir(codigo);
+		return ResponseEntity.noContent().build();
+
 	}
 
 	private URI getUri(Long codigo) {

@@ -35,7 +35,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "Recurso de Contatos", description = "Endpoints de contatos")
+@Tag(name = "Recurso de Contatos", description = "Endpoints de contato")
 @RestController
 @RequestMapping(value = "/v1/contatos", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
