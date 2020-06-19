@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;
@@ -24,24 +23,9 @@ public class ContatoDTO implements Serializable {
 	@NotBlank
 	private String email;
 
-	@NotNull
 	private Boolean favorito;
 
 	@NotBlank
 	private String telefone;
-
-//	public static ContatoDTO mapToDto(Contato contato) {
-//		ModelMapper modelMapper = new ModelMapper();
-//		return modelMapper.map(contato, ContatoDTO.class);
-//	}
-//
-//	public static Contato mapToModel(ContatoDTO contatoDTO) {
-//		ModelMapper modelMapper = new ModelMapper();
-//		return modelMapper.map(contatoDTO, Contato.class);
-//	}
-//
-//	public static List<ContatoDTO> mapToCollectionEntidade(List<Contato> contatos) {
-//		return contatos.stream().map(contato -> mapToDto(contato)).collect(Collectors.toList());
-//	}
 
 }

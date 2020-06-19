@@ -93,12 +93,12 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public Contato atualizar(Long codigo, Contato contato) {
-
-		buscarPorCodigo(codigo);
-		contato.setCodigo(codigo);
-		contato = this.contatoRepository.save(contato);
-
-		return contato;
+		return this.contatoRepository.findById(codigo).map(cont -> {
+			cont.setNome(contato.getNome());
+			cont.setEmail(contato.getEmail());
+			cont.setTelefone(contato.getTelefone());
+			return this.contatoRepository.save(cont);
+		}).orElseThrow(() -> new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO));
 	}
 
 	@Override
