@@ -1,6 +1,7 @@
 package br.com.srsolution.agenda.api.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -83,6 +84,16 @@ public class ClienteController {
 	public ResponseEntity<ClienteDTO> buscarPorCpf(@RequestParam String cpf) {
 		var cliente = this.clienteService.buscarPorCpf(cpf);
 		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
+	}
+
+	@Operation(description = "Realiza a busca de clientes com status ativo", summary = "Realiza a busca de clientes com status ativo")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Clientes com status de ativo encontrado"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado clientes com status de ativo"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@GetMapping("ativo")
+	public ResponseEntity<List<ClienteDTO>> buscarPorAtivo() {
+		var clientes = this.clienteService.findByAtivo();
+		return clientes != null ? ResponseEntity.ok(clientes) : ResponseEntity.notFound().build();
 	}
 
 	@Operation(description = "Remove um cliente por seu código", summary = "Remove um cliente por seu código")

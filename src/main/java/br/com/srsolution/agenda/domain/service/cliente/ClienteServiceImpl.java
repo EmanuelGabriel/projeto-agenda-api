@@ -60,6 +60,11 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
+	public List<ClienteDTO> findByAtivo() {
+		return this.modelMapper.toCollectionModel(this.clienteRepository.findByAtivoTrue());
+	}
+
+	@Override
 	public ClienteDTO buscarPorCpf(String cpf) {
 		var cliente = this.clienteRepository.findByCpf(cpf);
 		if (cliente == null) {

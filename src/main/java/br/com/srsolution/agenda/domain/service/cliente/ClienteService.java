@@ -1,5 +1,7 @@
 package br.com.srsolution.agenda.domain.service.cliente;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,6 +17,8 @@ public interface ClienteService {
 	Cliente buscarPorCodigo(Long codigo);
 
 	ClienteDTO buscarPorCpf(String cpf);
+
+	List<ClienteDTO> findByAtivo();
 
 	Cliente atualizar(Long codigo, Cliente cliente);
 
