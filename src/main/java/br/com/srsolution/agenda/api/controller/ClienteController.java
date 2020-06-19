@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -90,10 +91,20 @@ public class ClienteController {
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Clientes com status de ativo encontrado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado clientes com status de ativo"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@GetMapping("ativo")
+	@GetMapping("por-ativo")
 	public ResponseEntity<List<ClienteDTO>> buscarPorAtivo() {
 		var clientes = this.clienteService.findByAtivo();
 		return clientes != null ? ResponseEntity.ok(clientes) : ResponseEntity.notFound().build();
+	}
+
+	@Operation(description = "Ativa um cliente por seu código", summary = "Ativa um cliente por seu código")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente ativado com sucesso"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@PatchMapping("{codigo}/ativo")
+	public ResponseEntity<Void> ativarStatus(@PathVariable Long codigo) {
+		this.clienteService.ativarStatus(codigo);
+		return ResponseEntity.ok().build();
 	}
 
 	@Operation(description = "Remove um cliente por seu código", summary = "Remove um cliente por seu código")

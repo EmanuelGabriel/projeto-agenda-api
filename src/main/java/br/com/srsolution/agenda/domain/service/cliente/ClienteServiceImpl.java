@@ -40,9 +40,9 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public Cliente salvar(Cliente cliente) {
 
-		var clienteExistente = this.clienteRepository.findByCpf(cliente.getCpf());
+		var cpfClienteExistente = this.clienteRepository.findByCpf(cliente.getCpf());
 
-		if (clienteExistente != null && !clienteExistente.equals(cliente)) {
+		if (cpfClienteExistente != null && !cpfClienteExistente.equals(cliente)) {
 			throw new RegraNegocioException(CLIENTE_CPF_EXISTENTE);
 		}
 
@@ -90,6 +90,18 @@ public class ClienteServiceImpl implements ClienteService {
 			return Void.TYPE;
 		}).orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
 
+	}
+
+	@Override
+	public void ativarStatus(Long codigo) {
+		var cliente = this.clienteRepository.findById(codigo);
+		cliente.ifPresent(cli -> {
+			boolean ativo = cli.getAtivo() == Boolean.TRUE;
+			cli.setAtivo(!ativo);
+			this.clienteRepository.save(cliente.get());
+		});
+
+		cliente.orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
 	}
 
 }
