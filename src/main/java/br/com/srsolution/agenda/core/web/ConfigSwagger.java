@@ -1,4 +1,4 @@
-package br.com.srsolution.agenda.core;
+package br.com.srsolution.agenda.core.web;
 
 import org.springdoc.webmvc.ui.SwaggerConfig;
 

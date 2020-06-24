@@ -1,4 +1,4 @@
-package br.com.srsolution.agenda.core;
+package br.com.srsolution.agenda.core.modelmapper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

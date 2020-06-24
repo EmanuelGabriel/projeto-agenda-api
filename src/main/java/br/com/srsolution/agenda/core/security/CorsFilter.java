@@ -1,4 +1,4 @@
-package br.com.srsolution.agenda.core;
+package br.com.srsolution.agenda.core.security;
 
 import java.io.IOException;
 

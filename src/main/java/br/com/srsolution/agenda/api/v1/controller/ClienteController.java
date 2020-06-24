@@ -1,4 +1,4 @@
-package br.com.srsolution.agenda.api.controller;
+package br.com.srsolution.agenda.api.v1.controller;
 
 import java.net.URI;
 import java.util.List;
