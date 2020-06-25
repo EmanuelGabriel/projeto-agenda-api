@@ -84,15 +84,6 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
-	public void excluir(Long codigo) {
-		this.clienteRepository.findById(codigo).map(cliente -> {
-			this.clienteRepository.delete(cliente);
-			return Void.TYPE;
-		}).orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
-
-	}
-
-	@Override
 	public void ativarStatus(Long codigo) {
 		var cliente = this.clienteRepository.findById(codigo);
 		cliente.ifPresent(cli -> {
@@ -102,6 +93,22 @@ public class ClienteServiceImpl implements ClienteService {
 		});
 
 		cliente.orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
+	}
+
+	@Override
+	public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {
+		var cliente = buscarPorCodigo(codigo);
+		cliente.setAtivo(ativo);
+		this.clienteRepository.save(cliente);
+	}
+
+	@Override
+	public void excluir(Long codigo) {
+		this.clienteRepository.findById(codigo).map(cliente -> {
+			this.clienteRepository.delete(cliente);
+			return Void.TYPE;
+		}).orElseThrow(() -> new EntidadeNaoEncontradaException(CLIENTE_COD_NAO_ENCONTRADO));
+
 	}
 
 }

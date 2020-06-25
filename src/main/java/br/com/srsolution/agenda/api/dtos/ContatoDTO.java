@@ -2,10 +2,13 @@ package br.com.srsolution.agenda.api.dtos;
 
 import java.io.Serializable;
 
+import javax.persistence.Embedded;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.srsolution.agenda.domain.model.Endereco;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,5 +30,9 @@ public class ContatoDTO implements Serializable {
 
 	@NotBlank
 	private String telefone;
+
+	@NotNull
+	@Embedded
+	private Endereco endereco;
 
 }

@@ -1,0 +1,16 @@
+ALTER TABLE contato
+ADD COLUMN logradouro VARCHAR(80),
+ADD COLUMN numero VARCHAR(10),
+ADD COLUMN complemento VARCHAR(80),
+ADD COLUMN bairro VARCHAR(15),
+ADD COLUMN cep VARCHAR(15),
+ADD COLUMN cidade VARCHAR(50),
+ADD COLUMN estado VARCHAR(50);
+
+
+
+
+
+
+
+

@@ -97,6 +97,7 @@ public class ContatoServiceImpl implements ContatoService {
 			cont.setNome(contato.getNome());
 			cont.setEmail(contato.getEmail());
 			cont.setTelefone(contato.getTelefone());
+			cont.setEndereco(contato.getEndereco());
 			return this.contatoRepository.save(cont);
 		}).orElseThrow(() -> new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO));
 	}

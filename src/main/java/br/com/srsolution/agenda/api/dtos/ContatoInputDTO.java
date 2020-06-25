@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import br.com.srsolution.agenda.domain.model.Endereco;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,5 +27,8 @@ public class ContatoInputDTO implements Serializable {
 
 	@NotBlank
 	private String telefone;
+
+	@NotNull
+	private Endereco endereco;
 
 }

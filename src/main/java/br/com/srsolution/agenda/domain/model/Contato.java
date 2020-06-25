@@ -2,6 +2,7 @@ package br.com.srsolution.agenda.domain.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,5 +35,8 @@ public class Contato implements Serializable {
 
 	@NotBlank
 	private String telefone;
+
+	@Embedded
+	private Endereco endereco;
 
 }

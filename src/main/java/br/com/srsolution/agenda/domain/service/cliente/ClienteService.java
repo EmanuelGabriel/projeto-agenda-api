@@ -22,6 +22,8 @@ public interface ClienteService {
 
 	Cliente atualizar(Long codigo, Cliente cliente);
 
+	void atualizarPropriedadeAtivo(Long codigo, Boolean ativo);
+
 	void ativarStatus(Long codigo);
 
 	void excluir(Long codigo);

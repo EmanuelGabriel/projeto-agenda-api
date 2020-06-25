@@ -97,16 +97,6 @@ public class ClienteController {
 		return clientes != null ? ResponseEntity.ok(clientes) : ResponseEntity.notFound().build();
 	}
 
-	@Operation(description = "Ativa um cliente por seu código", summary = "Ativa um cliente por seu código")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente ativado com sucesso"),
-			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
-			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@PatchMapping("{codigo}/ativo")
-	public ResponseEntity<Void> ativarStatus(@PathVariable Long codigo) {
-		this.clienteService.ativarStatus(codigo);
-		return ResponseEntity.ok().build();
-	}
-
 	@Operation(description = "Remove um cliente por seu código", summary = "Remove um cliente por seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso."),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado um cliente com este código."),
@@ -128,6 +118,26 @@ public class ClienteController {
 		var cliente = this.modelMapper.toDto(clienteInputDTO);
 		this.clienteService.atualizar(codigo, cliente);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@Operation(description = "TESTE - Ativa um cliente com base em seu código", summary = "TESTE - Coloca um cliente com status de ativo")
+	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente ativado com sucesso"),
+			@ApiResponse(responseCode = "404", description = "Não há cliente cadastrado com este código"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@PutMapping("{codigo}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+		this.clienteService.atualizarPropriedadeAtivo(codigo, ativo);
+	}
+
+	@Operation(description = "Ativa um cliente por seu código", summary = "Ativa um cliente por seu código")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente ativado com sucesso"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@PatchMapping("{codigo}/ativo")
+	public ResponseEntity<Void> ativarStatus(@PathVariable Long codigo) {
+		this.clienteService.ativarStatus(codigo);
+		return ResponseEntity.ok().build();
 	}
 
 	private URI getUri(Long codigo) {

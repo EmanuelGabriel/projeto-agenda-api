@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS categoria (
+   codigo SERIAL NOT NULL PRIMARY KEY,
+   nome VARCHAR(30) NOT NULL
+);
+

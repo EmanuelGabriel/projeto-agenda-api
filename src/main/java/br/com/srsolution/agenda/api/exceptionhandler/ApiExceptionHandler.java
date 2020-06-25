@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,6 +37,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private static final String MSG_ERRO_GENERICA_USUARIO_FINAL = "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
 			+ "o problema persistir, entre em contato com o administrador do sistema.";
+
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+		TipoProblema tipoProblema = TipoProblema.DADOS_INVALIDOS;
+		String detalheErro = ex.getMessage();
+
+		ProblemaResponse problema = criarProblemaBuilder(status, tipoProblema).mensagem(detalheErro).build();
+
+		return super.handleExceptionInternal(ex, problema, headers, HttpStatus.BAD_REQUEST, request);
+	}
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -162,4 +175,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				.tipo(tipoProblema.getUri()).titulo(tipoProblema.getTitulo()).detalhe(detalhe);
 	}
 
+	public class Erro {
+
+		private String mensagemUsuario;
+		private String mensagemDev;
+
+		public Erro(String mensagemUsuario, String mensagemDev) {
+			this.mensagemUsuario = mensagemUsuario;
+			this.mensagemDev = mensagemDev;
+		}
+
+		public String getMensagemUsuario() {
+			return mensagemUsuario;
+		}
+
+		public String getMensagemDev() {
+			return mensagemDev;
+		}
+
+	}
 }
