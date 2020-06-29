@@ -35,6 +35,6 @@ public class ContatoModelMapper implements Serializable {
 
 	public List<ContatoDTO> toCollectionModel(List<Contato> contatos) {
 		return contatos.stream().map(this::toModel).collect(Collectors.toList());
-
 	}
+
 }

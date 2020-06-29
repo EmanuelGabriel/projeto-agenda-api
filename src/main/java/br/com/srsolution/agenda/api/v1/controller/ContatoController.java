@@ -116,9 +116,10 @@ public class ContatoController {
 			@ApiResponse(responseCode = "404", description = "Não há contato cadastrado com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PutMapping("{codigo}")
-	public ResponseEntity<ContatoDTO> atualizar(@PathVariable Long codigo, @Valid @RequestBody ContatoDTO contatoDTO) {
+	public ResponseEntity<ContatoDTO> atualizar(@PathVariable Long codigo,
+			@Valid @RequestBody ContatoInputDTO contatoInputDTO) {
 
-		Contato contato = this.modelMapper.toDto(contatoDTO);
+		Contato contato = this.modelMapper.toDto(contatoInputDTO);
 		this.contatoService.atualizar(codigo, contato);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}

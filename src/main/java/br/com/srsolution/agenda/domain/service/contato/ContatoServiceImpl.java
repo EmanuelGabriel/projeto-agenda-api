@@ -50,6 +50,7 @@ public class ContatoServiceImpl implements ContatoService {
 	public ContatoDTO buscarPorCodigo(Long codigo) {
 
 		var contato = this.contatoRepository.findById(codigo);
+
 		if (!contato.isPresent()) {
 			throw new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO);
 		}
@@ -93,12 +94,12 @@ public class ContatoServiceImpl implements ContatoService {
 
 	@Override
 	public Contato atualizar(Long codigo, Contato contato) {
-		return this.contatoRepository.findById(codigo).map(cont -> {
-			cont.setNome(contato.getNome());
-			cont.setEmail(contato.getEmail());
-			cont.setTelefone(contato.getTelefone());
-			cont.setEndereco(contato.getEndereco());
-			return this.contatoRepository.save(cont);
+		return this.contatoRepository.findById(codigo).map(atualizarContato -> {
+			atualizarContato.setNome(contato.getNome());
+			atualizarContato.setEmail(contato.getEmail());
+			atualizarContato.setTelefone(contato.getTelefone());
+			atualizarContato.setEndereco(contato.getEndereco());
+			return this.contatoRepository.save(atualizarContato);
 		}).orElseThrow(() -> new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO));
 	}
 
