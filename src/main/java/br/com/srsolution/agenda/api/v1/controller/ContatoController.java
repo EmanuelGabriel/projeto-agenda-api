@@ -110,16 +110,15 @@ public class ContatoController {
 		return ResponseEntity.ok().build();
 	}
 
-	@Operation(description = "Realiza a atualização de um contato por seu código", summary = "Realiza a atualização de um contato por seu código")
+	@Operation(description = "Faz a atualização de contato por seu código", summary = "Faz a atualização de contato por seu código")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Contato atualizado por seu código já existente"),
 			@ApiResponse(responseCode = "404", description = "Não há contato cadastrado com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PutMapping("{codigo}")
-	public ResponseEntity<ContatoDTO> atualizar(@PathVariable Long codigo,
-			@Valid @RequestBody ContatoInputDTO contatoInputDTO) {
+	public ResponseEntity<ContatoDTO> atualizar(@PathVariable Long codigo, @Valid @RequestBody ContatoDTO contatoDTO) {
 
-		Contato contato = this.modelMapper.toDto(contatoInputDTO);
+		Contato contato = this.modelMapper.toDto(contatoDTO);
 		this.contatoService.atualizar(codigo, contato);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}

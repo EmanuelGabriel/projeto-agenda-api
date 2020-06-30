@@ -95,8 +95,9 @@ public class ContatoServiceImpl implements ContatoService {
 	@Override
 	public Contato atualizar(Long codigo, Contato contato) {
 		return this.contatoRepository.findById(codigo).map(atualizarContato -> {
-			atualizarContato.setNome(contato.getNome());
+			atualizarContato.setNome(contato.getNome());	
 			atualizarContato.setEmail(contato.getEmail());
+			atualizarContato.setFavorito(contato.getFavorito());
 			atualizarContato.setTelefone(contato.getTelefone());
 			atualizarContato.setEndereco(contato.getEndereco());
 			return this.contatoRepository.save(atualizarContato);
