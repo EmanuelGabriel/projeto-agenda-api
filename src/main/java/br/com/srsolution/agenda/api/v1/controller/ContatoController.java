@@ -74,8 +74,8 @@ public class ContatoController {
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("{codigo}")
-	public ResponseEntity<ContatoDTO> buscarPorCodigo(@PathVariable Long codigo) {
-		ContatoDTO contato = this.contatoService.buscarPorCodigo(codigo);
+	public ResponseEntity<Contato> buscarPorCodigo(@PathVariable Long codigo) {
+		var contato = this.contatoService.findByCodigo(codigo);
 		return contato != null ? ResponseEntity.ok(contato) : ResponseEntity.notFound().build();
 	}
 
@@ -116,7 +116,7 @@ public class ContatoController {
 			@ApiResponse(responseCode = "404", description = "Não há contato cadastrado com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PutMapping("{codigo}")
-	public ResponseEntity<ContatoDTO> atualizar(@PathVariable Long codigo, @Valid @RequestBody ContatoDTO contatoDTO) {
+	public ResponseEntity<Void> atualizar(@PathVariable Long codigo, @Valid @RequestBody ContatoDTO contatoDTO) {
 
 		Contato contato = this.modelMapper.toDto(contatoDTO);
 		this.contatoService.atualizar(codigo, contato);

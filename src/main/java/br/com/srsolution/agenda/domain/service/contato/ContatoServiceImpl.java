@@ -61,6 +61,16 @@ public class ContatoServiceImpl implements ContatoService {
 	}
 
 	@Override
+	public Contato findByCodigo(Long codigo) {
+		var contato = this.contatoRepository.findById(codigo);
+		if (!contato.isPresent()) {
+			throw new EntidadeNaoEncontradaException(CONTATO_COD_NAO_ENCONTRADO);
+		}
+
+		return contato.get();
+	}
+
+	@Override
 	public List<ContatoDTO> buscarPorNome(String nome) {
 		var contatosPorNome = this.modelMapper.toCollectionModel(this.contatoRepository.findByNomeContaining(nome));
 		if (contatosPorNome.isEmpty()) {
@@ -95,9 +105,8 @@ public class ContatoServiceImpl implements ContatoService {
 	@Override
 	public Contato atualizar(Long codigo, Contato contato) {
 		return this.contatoRepository.findById(codigo).map(atualizarContato -> {
-			atualizarContato.setNome(contato.getNome());	
+			atualizarContato.setNome(contato.getNome());
 			atualizarContato.setEmail(contato.getEmail());
-			atualizarContato.setFavorito(contato.getFavorito());
 			atualizarContato.setTelefone(contato.getTelefone());
 			atualizarContato.setEndereco(contato.getEndereco());
 			return this.contatoRepository.save(atualizarContato);
