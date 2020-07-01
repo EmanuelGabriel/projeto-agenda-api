@@ -110,7 +110,7 @@ public class ContatoController {
 		return ResponseEntity.ok().build();
 	}
 
-	@Operation(description = "Faz a atualização de contato por seu código", summary = "Faz a atualização de contato por seu código")
+	@Operation(description = "Atualiza o contato por seu código", summary = "Atualiza o contato por seu código")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Contato atualizado por seu código já existente"),
 			@ApiResponse(responseCode = "404", description = "Não há contato cadastrado com este código"),
