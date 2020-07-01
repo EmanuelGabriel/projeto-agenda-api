@@ -2,6 +2,8 @@ package br.com.srsolution.agenda.domain.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +17,7 @@ public interface ContatoRepository extends JpaRepository<Contato, Long> {
 	List<Contato> findByNomeContaining(String nome);
 
 	List<Contato> findByTelefone(String telefone);
+
+	Page<Contato> findByNomeContaining(String nome, Pageable pageable);
 
 }

@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +29,7 @@ import br.com.srsolution.agenda.api.dtos.ContatoDTO;
 import br.com.srsolution.agenda.api.dtos.ContatoInputDTO;
 import br.com.srsolution.agenda.api.modelmapper.ContatoModelMapper;
 import br.com.srsolution.agenda.domain.model.Contato;
+import br.com.srsolution.agenda.domain.repository.ContatoRepository;
 import br.com.srsolution.agenda.domain.service.contato.ContatoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -42,6 +44,7 @@ import lombok.RequiredArgsConstructor;
 public class ContatoController {
 
 	private final ContatoService contatoService;
+	private final ContatoRepository contatoRepository;
 	private final ContatoModelMapper modelMapper;
 
 	@Operation(description = "Insere um contato.", summary = "Cria um novo contato.")
@@ -87,6 +90,16 @@ public class ContatoController {
 	public ResponseEntity<List<ContatoDTO>> buscarPorNome(String nome) {
 		List<ContatoDTO> contatoPorNome = this.contatoService.buscarPorNome(nome);
 		return contatoPorNome != null ? ResponseEntity.ok(contatoPorNome) : ResponseEntity.notFound().build();
+	}
+
+	@Operation(description = "Busca um contato por seu nome", summary = "Busca um contato por seu nome")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Realiza a busca de contato por seu nome"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este sugerido"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@GetMapping("nome")
+	public Page<Contato> pesquisarPorNome(@RequestParam(required = false, defaultValue = "%") String nome,
+			Pageable pageable) {
+		return this.contatoRepository.findByNomeContaining(nome, pageable);
 	}
 
 	@Operation(description = "Busca um contato por seu telefone", summary = "Busca um contato por seu telefone")
