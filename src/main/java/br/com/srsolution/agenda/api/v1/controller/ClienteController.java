@@ -67,13 +67,13 @@ public class ClienteController {
 		return ResponseEntity.created(location).build();
 	}
 
-	@Operation(description = "Busca um cliente por seu código ou id", summary = "Busca um cliente por seu código ou id")
+	@Operation(description = "Busca um cliente por seu código", summary = "Busca um cliente por seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado por seu código"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("{codigo}")
-	public ResponseEntity<ClienteDTO> buscarPorCodigo(@PathVariable Long codigo) {
-		var cliente = this.modelMapper.toModel(this.clienteService.buscarPorCodigo(codigo));
+	public ResponseEntity<Cliente> buscarPorCodigo(@PathVariable Long codigo) {
+		var cliente = this.clienteService.buscarPorCodigo(codigo);
 		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
 	}
 

@@ -72,6 +72,19 @@ public class ContatoController {
 		return contatos != null ? ResponseEntity.ok(contatos) : ResponseEntity.notFound().build();
 	}
 
+	@Operation(description = "Busca um contato por seu nome", summary = "Busca um contato por seu nome")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Realiza a busca de contato por seu nome"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este sugerido"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@GetMapping("nome")
+	public ResponseEntity<Page<Contato>> pesquisarPorNome(
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "size", defaultValue = "5") Integer size, String nome, Pageable pageable) {
+		Page<Contato> findByNomeContaining = this.contatoRepository.findByNomeContaining(nome, pageable);
+		return findByNomeContaining != null ? ResponseEntity.ok(findByNomeContaining)
+				: ResponseEntity.notFound().build();
+	}
+
 	@Operation(description = "Busca um contato por seu código ou id", summary = "Busca um contato por seu código ou id")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Contato encontrado por seu código"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este código"),
@@ -90,16 +103,6 @@ public class ContatoController {
 	public ResponseEntity<List<ContatoDTO>> buscarPorNome(String nome) {
 		List<ContatoDTO> contatoPorNome = this.contatoService.buscarPorNome(nome);
 		return contatoPorNome != null ? ResponseEntity.ok(contatoPorNome) : ResponseEntity.notFound().build();
-	}
-
-	@Operation(description = "Busca um contato por seu nome", summary = "Busca um contato por seu nome")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Realiza a busca de contato por seu nome"),
-			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este sugerido"),
-			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@GetMapping("nome")
-	public Page<Contato> pesquisarPorNome(@RequestParam(required = false, defaultValue = "%") String nome,
-			Pageable pageable) {
-		return this.contatoRepository.findByNomeContaining(nome, pageable);
 	}
 
 	@Operation(description = "Busca um contato por seu telefone", summary = "Busca um contato por seu telefone")
