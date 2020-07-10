@@ -107,15 +107,13 @@ public class ClienteController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@Operation(description = "Realiza a atualização de um cliente por seu código", summary = "Realiza a atualização de um cliente por seu código")
+	@Operation(description = "Atualiza um cliente por seu código", summary = "Atualiza um cliente por seu código")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Cliente atualizado por seu código já existente"),
 			@ApiResponse(responseCode = "404", description = "Não há cliente cadastrado com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PutMapping("{codigo}")
-	public ResponseEntity<ClienteDTO> atualizar(@PathVariable Long codigo,
-			@Valid @RequestBody ClienteInputDTO clienteInputDTO) {
-		var cliente = this.modelMapper.toDto(clienteInputDTO);
+	public ResponseEntity<ClienteDTO> atualizar(@PathVariable Long codigo, @Valid @RequestBody Cliente cliente) {
 		this.clienteService.atualizar(codigo, cliente);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
