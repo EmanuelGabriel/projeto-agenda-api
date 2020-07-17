@@ -34,9 +34,11 @@ import br.com.srsolution.agenda.domain.service.contato.ContatoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@SecurityRequirement(name = "agenda_oauth")
 @Tag(name = "Recurso de Contatos", description = "Endpoints de contato")
 @RestController
 @RequestMapping(value = "/v1/contatos", produces = MediaType.APPLICATION_JSON_VALUE)

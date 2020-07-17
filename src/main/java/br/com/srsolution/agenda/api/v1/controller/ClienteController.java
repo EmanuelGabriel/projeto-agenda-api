@@ -32,9 +32,11 @@ import br.com.srsolution.agenda.domain.service.cliente.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@SecurityRequirement(name = "agenda_oauth")
 @Tag(name = "Recurso de Clientes", description = "Endpoints de Cliente")
 @RestController
 @RequestMapping(value = "/v1/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -118,7 +120,7 @@ public class ClienteController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	@Operation(description = "TESTE - Ativa um cliente com base em seu código", summary = "TESTE - Coloca um cliente com status de ativo")
+	@Operation(description = "TESTE - Ativa um cliente com base em seu código", summary = "TESTE - Ativa um cliente com base em seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente ativado com sucesso"),
 			@ApiResponse(responseCode = "404", description = "Não há cliente cadastrado com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
