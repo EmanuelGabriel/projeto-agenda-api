@@ -51,6 +51,7 @@ public class ContatoController {
 
 	@Operation(description = "Insere um contato.", summary = "Cria um novo contato.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Contato inserido com sucesso."),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto.") })
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -65,6 +66,7 @@ public class ContatoController {
 
 	@Operation(description = "Exibe uma lista de contatos com paginação", summary = "Exibe uma lista de contatos com paginação")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Lista de contatos exibida com sucesso."),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não há contatos registrados"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping
@@ -76,6 +78,7 @@ public class ContatoController {
 
 	@Operation(description = "Busca um contato por seu nome", summary = "Busca um contato por seu nome")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Realiza a busca de contato por seu nome"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este sugerido"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("nome")
@@ -89,6 +92,7 @@ public class ContatoController {
 
 	@Operation(description = "Busca um contato por seu código ou id", summary = "Busca um contato por seu código ou id")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Contato encontrado por seu código"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("{codigo}")
@@ -99,6 +103,7 @@ public class ContatoController {
 
 	@Operation(description = "Busca um contato por seu nome", summary = "Busca um contato por seu nome")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Realiza a busca de contato por seu nome"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este sugerido"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("por-nome")
@@ -110,6 +115,7 @@ public class ContatoController {
 	@Operation(description = "Busca um contato por seu telefone", summary = "Busca um contato por seu telefone")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Realiza a busca de contato por seu telefone"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este número"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("por-telefone")
@@ -120,6 +126,7 @@ public class ContatoController {
 
 	@Operation(description = "Favorita um contato por seu código", summary = "Favorita um contato por seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Contato favoritado com sucesso"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PatchMapping("{codigo}/favorito")
@@ -131,6 +138,7 @@ public class ContatoController {
 	@Operation(description = "Atualiza o contato por seu código", summary = "Atualiza o contato por seu código")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Contato atualizado por seu código já existente"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não há contato cadastrado com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PutMapping("{codigo}")
@@ -141,6 +149,7 @@ public class ContatoController {
 
 	@Operation(description = "Remove um contato por seu código", summary = "Remove um contato por seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Contato removido com sucesso"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado um contato com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@DeleteMapping("{codigo}")

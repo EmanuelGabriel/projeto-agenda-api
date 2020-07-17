@@ -48,6 +48,7 @@ public class ClienteController {
 
 	@Operation(description = "Exibe uma lista de clientes com paginação", summary = "Exibe uma lista de clientes com paginação")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Lista de clientes exibida com sucesso."),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não há clientes registrados"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping
@@ -59,6 +60,7 @@ public class ClienteController {
 
 	@Operation(description = "Insere um cliente.", summary = "Cria um novo cliente.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Cliente inserido com sucesso."),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto.") })
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -71,6 +73,7 @@ public class ClienteController {
 
 	@Operation(description = "Busca um cliente por seu código", summary = "Busca um cliente por seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado por seu código"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("{codigo}")
@@ -81,6 +84,7 @@ public class ClienteController {
 
 	@Operation(description = "Realiza a busca de um cliente por seu CPF", summary = "Realiza a busca de um cliente por seu CPF")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado por seu CPF"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este CPF"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("por-cpf")
@@ -91,6 +95,7 @@ public class ClienteController {
 
 	@Operation(description = "Realiza a busca de clientes com status ativo", summary = "Realiza a busca de clientes com status ativo")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Clientes com status de ativo encontrado"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado clientes com status de ativo"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("por-ativo")
@@ -101,6 +106,7 @@ public class ClienteController {
 
 	@Operation(description = "Remove um cliente por seu código", summary = "Remove um cliente por seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso."),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado um cliente com este código."),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto.") })
 	@DeleteMapping("{codigo}")
@@ -112,6 +118,7 @@ public class ClienteController {
 	@Operation(description = "Atualiza um cliente por seu código", summary = "Atualiza um cliente por seu código")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "204", description = "Cliente atualizado por seu código já existente"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não há cliente cadastrado com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PutMapping("{codigo}")
@@ -122,6 +129,7 @@ public class ClienteController {
 
 	@Operation(description = "TESTE - Ativa um cliente com base em seu código", summary = "TESTE - Ativa um cliente com base em seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente ativado com sucesso"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não há cliente cadastrado com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PutMapping("{codigo}/ativo")
@@ -132,6 +140,7 @@ public class ClienteController {
 
 	@Operation(description = "Ativa um cliente por seu código", summary = "Ativa um cliente por seu código")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente ativado com sucesso"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PatchMapping("{codigo}/ativo")

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @OpenAPIDefinition(
 		info = @Info(description = "Documentação da API Restful Agenda On-line", 
+		termsOfService = "Termos de serviço",
 title = "API Restful Agenda On-line", 
 version = "1.0.0", 
 contact = @Contact(name = "Emanuel Gabriel Sousa", email = "emanuel.gabriel.sousa@protonmail.com", url = "emanuelgabriel.github.io")))
