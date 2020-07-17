@@ -29,9 +29,11 @@ public class Usuario implements Serializable {
 	private String nome;
 
 	@Email
+	@NotBlank
 	private String email;
 
 	private String senha;
+
 	private Boolean ativo;
 
 	@Column(name = "data_cadastro")
