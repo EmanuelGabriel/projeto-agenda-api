@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,7 +28,6 @@ import br.com.srsolution.agenda.api.dtos.ContatoDTO;
 import br.com.srsolution.agenda.api.dtos.ContatoInputDTO;
 import br.com.srsolution.agenda.api.modelmapper.ContatoModelMapper;
 import br.com.srsolution.agenda.domain.model.Contato;
-import br.com.srsolution.agenda.domain.repository.ContatoRepository;
 import br.com.srsolution.agenda.domain.service.contato.ContatoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -46,7 +44,6 @@ import lombok.RequiredArgsConstructor;
 public class ContatoController {
 
 	private final ContatoService contatoService;
-	private final ContatoRepository contatoRepository;
 	private final ContatoModelMapper modelMapper;
 
 	@Operation(description = "Insere um contato.", summary = "Cria um novo contato.")
@@ -57,7 +54,7 @@ public class ContatoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<ContatoDTO> criar(@Valid @RequestBody ContatoInputDTO contatoInputDTO) {
 
-		Contato contato = this.modelMapper.toDto(contatoInputDTO);
+		var contato = this.modelMapper.toDto(contatoInputDTO);
 		this.contatoService.salvar(contato);
 		URI location = getUri(contato.getCodigo());
 		return ResponseEntity.created(location).build();
@@ -72,22 +69,8 @@ public class ContatoController {
 	@GetMapping
 	public ResponseEntity<Page<Contato>> listar(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "size", defaultValue = "5") Integer size) {
-		Page<Contato> contatos = this.contatoService.lista(PageRequest.of(page, size, Sort.by("codigo")));
+		var contatos = this.contatoService.lista(PageRequest.of(page, size, Sort.by("codigo")));
 		return contatos != null ? ResponseEntity.ok(contatos) : ResponseEntity.notFound().build();
-	}
-
-	@Operation(description = "Busca um contato por seu nome", summary = "Busca um contato por seu nome")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Realiza a busca de contato por seu nome"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
-			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este sugerido"),
-			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@GetMapping("nome")
-	public ResponseEntity<Page<Contato>> pesquisarPorNome(
-			@RequestParam(value = "page", defaultValue = "0") Integer page,
-			@RequestParam(value = "size", defaultValue = "5") Integer size, String nome, Pageable pageable) {
-		Page<Contato> findByNomeContaining = this.contatoRepository.findByNomeContaining(nome, pageable);
-		return findByNomeContaining != null ? ResponseEntity.ok(findByNomeContaining)
-				: ResponseEntity.notFound().build();
 	}
 
 	@Operation(description = "Busca um contato por seu código ou id", summary = "Busca um contato por seu código ou id")
@@ -108,7 +91,7 @@ public class ContatoController {
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("por-nome")
 	public ResponseEntity<List<ContatoDTO>> buscarPorNome(String nome) {
-		List<ContatoDTO> contatoPorNome = this.contatoService.buscarPorNome(nome);
+		var contatoPorNome = this.contatoService.buscarPorNome(nome);
 		return contatoPorNome != null ? ResponseEntity.ok(contatoPorNome) : ResponseEntity.notFound().build();
 	}
 
@@ -120,7 +103,7 @@ public class ContatoController {
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("por-telefone")
 	public ResponseEntity<List<ContatoDTO>> buscarPorTelefone(@RequestParam("telefone") String telefone) {
-		List<ContatoDTO> contatoPorTelefone = this.contatoService.buscarPorTelefone(telefone);
+		var contatoPorTelefone = this.contatoService.buscarPorTelefone(telefone);
 		return contatoPorTelefone != null ? ResponseEntity.ok(contatoPorTelefone) : ResponseEntity.notFound().build();
 	}
 
