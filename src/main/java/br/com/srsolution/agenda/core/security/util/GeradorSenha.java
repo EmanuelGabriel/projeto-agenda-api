@@ -10,7 +10,7 @@ public class GeradorSenha {
 
 	private static void gerarSenhaCriptografada() {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		System.out.println(encoder.encode("m0b1l30"));
+		System.out.println(encoder.encode("@ngul@r-@654321"));
 	}
 
 }

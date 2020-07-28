@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 @SecurityRequirement(name = "agenda_oauth")
 @Tag(name = "Recurso de Contatos", description = "Endpoints de contato")
 @RestController
-@RequestMapping(value = "/v1/contatos", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/contatos", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ContatoController {
 
@@ -89,10 +89,22 @@ public class ContatoController {
 			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este sugerido"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@GetMapping("por-nome")
-	public ResponseEntity<List<ContatoDTO>> buscarPorNome(String nome) {
+	@GetMapping("resumo")
+	public ResponseEntity<List<Contato>> buscarPorNome(String nome) {
 		var contatoPorNome = this.contatoService.buscarPorNome(nome);
 		return contatoPorNome != null ? ResponseEntity.ok(contatoPorNome) : ResponseEntity.notFound().build();
+	}
+
+	@Operation(description = "Busca um contato por seu nome", summary = "Busca um contato por seu nome")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Realiza a busca de contato por seu nome"),
+			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado contato com este sugerido"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@GetMapping("por-nome")
+	public ResponseEntity<Page<Contato>> pesquisar(@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "size", defaultValue = "5") Integer size, String nome) {
+		var contatos = this.contatoService.findByNome(nome, PageRequest.of(page, size));
+		return contatos != null ? ResponseEntity.ok(contatos) : ResponseEntity.notFound().build();
 	}
 
 	@Operation(description = "Busca um contato por seu telefone", summary = "Busca um contato por seu telefone")

@@ -71,13 +71,18 @@ public class ContatoServiceImpl implements ContatoService {
 	}
 
 	@Override
-	public List<ContatoDTO> buscarPorNome(String nome) {
-		var contatosPorNome = this.modelMapper.toCollectionModel(this.contatoRepository.findByNomeContaining(nome));
+	public List<Contato> buscarPorNome(String nome) {
+		var contatosPorNome = this.contatoRepository.findByNomeContaining(nome);
 		if (contatosPorNome.isEmpty()) {
 			throw new EntidadeNaoEncontradaException("Não foi encontrado um contato com este nome");
 		}
 
 		return contatosPorNome;
+	}
+
+	@Override
+	public Page<Contato> findByNome(String nome, Pageable pageable) {
+		return this.contatoRepository.findByNomeContaining(nome, pageable);
 	}
 
 	@Override
@@ -126,4 +131,5 @@ public class ContatoServiceImpl implements ContatoService {
 		}
 
 	}
+
 }

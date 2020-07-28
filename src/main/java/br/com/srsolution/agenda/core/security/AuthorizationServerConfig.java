@@ -1,5 +1,7 @@
 package br.com.srsolution.agenda.core.security;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +12,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -51,9 +54,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 
-		endpoints.tokenStore(this.tokenStore())
+		var tokenEnhancerChain = new TokenEnhancerChain();
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+		
+		endpoints
+			.tokenStore(this.tokenStore())
+			//.tokenEnhancer(tokenEnhancerChain)
 			.accessTokenConverter(accessTokenConverter())
 			.reuseRefreshTokens(false)
+			//.userDetailsService(userDetailsService)
 			.authenticationManager(authenticationManager);
 	}
 
@@ -64,15 +73,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		clients.inMemory()
 				.withClient(chave_encoded_clientId) // ClientId
 				.secret(chave_encoded_secret) // clientSecret
-				.scopes("read", "write") // scopes - leitura (read) e escrita (write)
+				.scopes("read", "write") // ESCRITA E LEITURA
 				.authorizedGrantTypes("password", "refresh_token")
 				.accessTokenValiditySeconds(1800) // duranção de SEGUNDOS da duração do token 1800/equivalente a 30 minutos
 				.refreshTokenValiditySeconds(90) // 3600 * 24 = 24h PARA EXPIRAR
 
 					.and()
 					
-				.withClient("YWdlbmRhLW9ubGluZS1tb2JpbGU=")
-				.secret("QDY1NDMyMS1tb2JpbGU=")
+				.withClient("@gend@-m0bil3")
+				.secret("m0b1l30")
 				.scopes("read", "write") // scopes - leitura											
 				.authorizedGrantTypes("password", "refresh_token")
 				.accessTokenValiditySeconds(1800) // duranção de SEGUNDOS da duração do token

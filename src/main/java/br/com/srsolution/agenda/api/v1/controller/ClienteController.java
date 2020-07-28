@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 @SecurityRequirement(name = "agenda_oauth")
 @Tag(name = "Recurso de Clientes", description = "Endpoints de Cliente")
 @RestController
-@RequestMapping(value = "/v1/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/v1/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ClienteController {
 

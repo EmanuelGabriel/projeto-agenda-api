@@ -18,7 +18,9 @@ public interface ContatoService {
 
 	Contato findByCodigo(Long codigo);
 
-	List<ContatoDTO> buscarPorNome(String nome);
+	Page<Contato> findByNome(String nome, Pageable pageable);
+
+	List<Contato> buscarPorNome(String nome);
 
 	List<ContatoDTO> buscarPorTelefone(String telefone);
 

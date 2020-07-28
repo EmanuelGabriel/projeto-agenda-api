@@ -2,9 +2,7 @@ package br.com.srsolution.agenda.core.security;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -13,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 //@Component
 //@Order(Ordered.HIGHEST_PRECEDENCE)
-public class CorsFilter implements Filter {
+public class CorsFilter { // implements Filter {
 
 	// TODO: Configurar para diferentes Ambientes/Origins
 	// private static final String ORIGIN_PERMITIDA = "http://localhost:8000";
@@ -24,7 +22,7 @@ public class CorsFilter implements Filter {
 	private static final String CONTROL_ACCESS_ORIGIN = "Access-Control-Allow-Origin";
 	private static final String CONTROL_ACCESS_CREDENTIALS = "Access-Control-Allow-Credentials";
 
-	@Override
+	// @Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
 
@@ -44,14 +42,6 @@ public class CorsFilter implements Filter {
 			chain.doFilter(req, resp);
 		}
 
-	}
-
-	@Override
-	public void destroy() {
-	}
-
-	@Override
-	public void init(FilterConfig arg0) throws ServletException {
 	}
 
 }

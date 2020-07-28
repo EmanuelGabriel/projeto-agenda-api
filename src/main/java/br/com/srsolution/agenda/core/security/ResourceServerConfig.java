@@ -1,5 +1,7 @@
 package br.com.srsolution.agenda.core.security;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import br.com.srsolution.agenda.core.security.util.AuthExceptionEntryPoint;
 
@@ -24,6 +29,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		
 		// Configurações relativas ao Resources
 		http
+			.cors()
+				.and()
 			.authorizeRequests()
 				.antMatchers("/agenda/v1/clientes/**", "/agenda/v1/contatos/**").hasRole("USER")
 				.anyRequest().authenticated()
@@ -39,6 +46,22 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Bean
 	public MethodSecurityExpressionHandler createExpressionHandler() {
 		return new OAuth2MethodSecurityExpressionHandler();
+	}
+	
+	// @Bean
+	public CorsFilter corsFilter() {
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		config.setMaxAge(3600L);
+		config.setAllowedOrigins(
+				Arrays.asList("http://localhost:4200", "https://agendaonlineapi.herokuapp.com/agenda", "http://localhost:4200/"));
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+
+		return new CorsFilter(source);
 	}
 
 }
