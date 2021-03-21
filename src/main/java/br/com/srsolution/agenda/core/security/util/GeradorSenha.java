@@ -9,8 +9,11 @@ public class GeradorSenha {
 	}
 
 	private static void gerarSenhaCriptografada() {
+		String senhaEncoder = "usuario123";
+
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		System.out.println(encoder.encode("@ngul@r-@654321"));
+		String senhaCripto = encoder.encode(senhaEncoder);
+		System.out.println(senhaCripto);
 	}
 
 }

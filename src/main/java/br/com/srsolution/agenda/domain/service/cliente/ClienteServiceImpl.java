@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.srsolution.agenda.api.dtos.ClienteDTO;
+import br.com.srsolution.agenda.api.dtos.response.ClienteModelResponse;
 import br.com.srsolution.agenda.api.modelmapper.ClienteModelMapper;
 import br.com.srsolution.agenda.domain.exception.EntidadeNaoEncontradaException;
 import br.com.srsolution.agenda.domain.exception.RegraNegocioException;
@@ -31,10 +31,6 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public Page<Cliente> listarTodos(Pageable pageable) {
 		return this.clienteRepository.findAll(pageable);
-	}
-
-	public List<ClienteDTO> listarTodoss() {
-		return this.modelMapper.toCollectionModel(this.clienteRepository.findAll());
 	}
 
 	@Override
@@ -60,18 +56,17 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
-	public List<ClienteDTO> findByAtivo() {
-		return this.modelMapper.toCollectionModel(this.clienteRepository.findByAtivoTrue());
+	public List<ClienteModelResponse> findByAtivo() {
+		return this.modelMapper.toCollectionModelResponse(this.clienteRepository.findByAtivoTrue());
 	}
 
 	@Override
-	public ClienteDTO buscarPorCpf(String cpf) {
+	public Cliente buscarPorCpf(String cpf) {
 		var cliente = this.clienteRepository.findByCpf(cpf);
 		if (cliente == null) {
 			throw new EntidadeNaoEncontradaException(CLIENTE_CPF_NAO_ENCONTRADO);
 		}
-		var clienteDto = this.modelMapper.toModel(cliente);
-		return clienteDto;
+		return cliente;
 	}
 
 	@Override

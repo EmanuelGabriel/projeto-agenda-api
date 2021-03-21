@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,7 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UsuarioService usuarioService;
 	
-	  private static final String[] PUBLICO_MATCHERS = {
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	  private static final String[] URLS_PUBLICAS = {
 	    		"/v2/api-docs/**",
 	    		"/api-docs/**",
 	    		"/swagger-ui.html",
@@ -32,12 +37,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	            "/agenda/api-docs",
 	    		"/swagger-ui/**"};
 
-	
 		@Bean
 		public AuthenticationManager authenticationManager() throws Exception {
 			return super.authenticationManager();
 		}
 
+//		@Bean
+//		public PasswordEncoder passwordEncoder() {
+//		    return new BCryptPasswordEncoder();
+//		}
+		
 		@Bean
 		public PasswordEncoder passwordEncoder() {
 			return NoOpPasswordEncoder.getInstance();
@@ -47,35 +56,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 	
 		// Gerenciamento de autenticação da aplicação (os usuários do sistema em memória)
-		auth
-			.inMemoryAuthentication()
+		auth.inMemoryAuthentication()
+			//.passwordEncoder(passwordEncoder())
 			.withUser("admin")
-			.password("admin")
-			.roles("USER");
+			.password(passwordEncoder().encode("admin123"))
+			.roles("ADMIN");
+		
+		
+		//auth
+		 	//.userDetailsService(this.usuarioService).passwordEncoder(passwordEncoder());
+
 	}
 	
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
 		// autorização de urls, habilitação de CORS
 		http
 			.csrf().disable()
 			.cors()
 		.and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Não vai guardar sessão (sem estado)
+		// Não vai guardar sessão (sem estado)
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); 
 	}
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring()
-			.antMatchers(PUBLICO_MATCHERS);
+		web.ignoring().antMatchers(URLS_PUBLICAS);
 	}
-	
-	
-//	@Bean
-//	public PasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
 
 }

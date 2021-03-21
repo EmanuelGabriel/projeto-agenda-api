@@ -17,11 +17,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
 	Cliente findByCpf(String cpf);
 
-	// pode ser feito com a anotação 'Query'
 	@Query("SELECT c FROM Cliente c WHERE c.ativo = true")
 	List<Cliente> findByAtivo();
 
-	// ou poderia ser feito assim:
 	List<Cliente> findByAtivoTrue();
 
 }

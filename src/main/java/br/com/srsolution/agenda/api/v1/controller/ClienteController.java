@@ -5,9 +5,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +27,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.srsolution.agenda.api.dtos.ClienteDTO;
-import br.com.srsolution.agenda.api.dtos.ClienteInputDTO;
+import br.com.srsolution.agenda.api.dtos.request.ClienteModelInputRequest;
+import br.com.srsolution.agenda.api.dtos.request.ClienteModelParcialRequest;
+import br.com.srsolution.agenda.api.dtos.response.ClienteModelResponse;
 import br.com.srsolution.agenda.api.modelmapper.ClienteModelMapper;
 import br.com.srsolution.agenda.domain.model.Cliente;
 import br.com.srsolution.agenda.domain.service.cliente.ClienteService;
@@ -34,118 +38,113 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 
 @SecurityRequirement(name = "agenda_oauth")
 @Tag(name = "Recurso de Clientes", description = "Endpoints de Cliente")
 @RestController
 @RequestMapping(path = "/v1/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
-@RequiredArgsConstructor
 public class ClienteController {
 
-	private final ClienteService clienteService;
-	private final ClienteModelMapper modelMapper;
+	@Autowired
+	private ClienteService clienteService;
 
-	@Operation(description = "Exibe uma lista de clientes com paginação", summary = "Exibe uma lista de clientes com paginação")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Lista de clientes exibida com sucesso."),
+	@Autowired
+	private ClienteModelMapper modelMapper;
+
+	@Operation(description = "Lista de clientes", summary = "Lista de clientes")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não há clientes registrados"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping
-	public ResponseEntity<Page<Cliente>> listar(@RequestParam(value = "page", defaultValue = "0") Integer page,
+	public ResponseEntity<Page<ClienteModelResponse>> listar(
+			@PageableDefault(page = 0, size = 5, direction = Direction.ASC) @RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "size", defaultValue = "5") Integer size) {
-		var clientes = this.clienteService.listarTodos(PageRequest.of(page, size, Sort.by("codigo")));
-		return clientes != null ? ResponseEntity.ok(clientes) : ResponseEntity.notFound().build();
+
+		Page<Cliente> pageCliente = this.clienteService.listarTodos(PageRequest.of(page, size, Sort.by("codigo")));
+		Page<ClienteModelResponse> pageClienteModelResponse = pageCliente.map(obj -> new ClienteModelResponse(obj));
+
+		return pageCliente != null ? ResponseEntity.ok(pageClienteModelResponse) : ResponseEntity.notFound().build();
 	}
 
-	@Operation(description = "Insere um cliente.", summary = "Cria um novo cliente.")
-	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Cliente inserido com sucesso."),
+	@Operation(description = "Adiciona cliente", summary = "Adiciona cliente")
+	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Cliente inserido com sucesso"),
 			@ApiResponse(responseCode = "401", description = "Não autorizado"),
-			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto.") })
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<ClienteDTO> criar(@Valid @RequestBody ClienteInputDTO clienteInputDTO) {
-		var cliente = this.modelMapper.toDto(clienteInputDTO);
+	public ResponseEntity<ClienteModelResponse> criar(@Valid @RequestBody ClienteModelInputRequest request) {
+		var cliente = this.modelMapper.toDto(request);
 		this.modelMapper.toModel(this.clienteService.salvar(cliente));
 		URI location = getUri(cliente.getCodigo());
 		return ResponseEntity.created(location).build();
 	}
 
-	@Operation(description = "Busca um cliente por seu código", summary = "Busca um cliente por seu código")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado por seu código"),
+	@Operation(description = "Busca cliente por ID", summary = "Busca cliente por ID")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@GetMapping("{codigo}")
-	public ResponseEntity<Cliente> buscarPorCodigo(@PathVariable Long codigo) {
-		var cliente = this.clienteService.buscarPorCodigo(codigo);
+	@GetMapping("{codigoCliente}")
+	public ResponseEntity<ClienteModelResponse> buscarPorCodigo(@PathVariable Long codigoCliente) {
+		var cliente = this.modelMapper.toModel(this.clienteService.buscarPorCodigo(codigoCliente));
 		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
 	}
 
-	@Operation(description = "Realiza a busca de um cliente por seu CPF", summary = "Realiza a busca de um cliente por seu CPF")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado por seu CPF"),
+	@Operation(description = "Busca cliente por CPF", summary = "Busca cliente por CPF")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este CPF"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("por-cpf")
-	public ResponseEntity<ClienteDTO> buscarPorCpf(@RequestParam String cpf) {
-		var cliente = this.clienteService.buscarPorCpf(cpf);
+	public ResponseEntity<ClienteModelResponse> buscarPorCpf(@RequestParam String cpf) {
+		var cliente = this.modelMapper.toModel(this.clienteService.buscarPorCpf(cpf));
 		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
 	}
 
-	@Operation(description = "Realiza a busca de clientes com status ativo", summary = "Realiza a busca de clientes com status ativo")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Clientes com status de ativo encontrado"),
+	@Operation(description = "Clientes com status ativo", summary = "Clientes com status ativo")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Não autorizado"),
-			@ApiResponse(responseCode = "404", description = "Não foi encontrado clientes com status de ativo"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com status de ativo"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("por-ativo")
-	public ResponseEntity<List<ClienteDTO>> buscarPorAtivo() {
+	public ResponseEntity<List<ClienteModelResponse>> buscarPorAtivo() {
 		var clientes = this.clienteService.findByAtivo();
 		return clientes != null ? ResponseEntity.ok(clientes) : ResponseEntity.notFound().build();
 	}
 
-	@Operation(description = "Remove um cliente por seu código", summary = "Remove um cliente por seu código")
-	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso."),
+	@Operation(description = "Remove cliente por ID", summary = "Remove cliente por ID")
+	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso"),
 			@ApiResponse(responseCode = "401", description = "Não autorizado"),
-			@ApiResponse(responseCode = "404", description = "Não foi encontrado um cliente com este código."),
-			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto.") })
-	@DeleteMapping("{codigo}")
-	public ResponseEntity<Void> remover(@PathVariable Long codigo) {
-		this.clienteService.excluir(codigo);
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado um cliente com este código"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@DeleteMapping("{codigoCliente}")
+	public ResponseEntity<Void> remover(@PathVariable Long codigoCliente) {
+		this.clienteService.excluir(codigoCliente);
 		return ResponseEntity.noContent().build();
 	}
 
-	@Operation(description = "Atualiza um cliente por seu código", summary = "Atualiza um cliente por seu código")
-	@ApiResponses(value = {
-			@ApiResponse(responseCode = "204", description = "Cliente atualizado por seu código já existente"),
+	@Operation(description = "Atualiza cliente por ID", summary = "Atualiza cliente por ID")
+	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente atualizado"),
 			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não há cliente cadastrado com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@PutMapping("{codigo}")
-	public ResponseEntity<ClienteDTO> atualizar(@PathVariable Long codigo, @Valid @RequestBody Cliente cliente) {
-		this.clienteService.atualizar(codigo, cliente);
+	@PutMapping("{codigoCliente}")
+	public ResponseEntity<ClienteModelResponse> atualizar(@PathVariable Long codigoCliente,
+			@Valid @RequestBody ClienteModelParcialRequest request) {
+		var cliente = this.modelMapper.toDto(request);
+		this.clienteService.atualizar(codigoCliente, cliente);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	@Operation(description = "TESTE - Ativa um cliente com base em seu código", summary = "TESTE - Ativa um cliente com base em seu código")
-	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente ativado com sucesso"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
-			@ApiResponse(responseCode = "404", description = "Não há cliente cadastrado com este código"),
-			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@PutMapping("{codigo}/ativo")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void atualizarPropriedadeAtivo(@PathVariable Long codigo, @RequestBody Boolean ativo) {
-		this.clienteService.atualizarPropriedadeAtivo(codigo, ativo);
-	}
-
-	@Operation(description = "Ativa um cliente por seu código", summary = "Ativa um cliente por seu código")
-	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Cliente ativado com sucesso"),
+	@Operation(description = "Ativa cliente por ID", summary = "Ativa cliente por ID")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "401", description = "Não autorizado"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@PatchMapping("{codigo}/ativo")
-	public ResponseEntity<Void> ativarStatus(@PathVariable Long codigo) {
-		this.clienteService.ativarStatus(codigo);
+	@PatchMapping("{codigoCliente}/ativo")
+	public ResponseEntity<Void> ativarStatus(@PathVariable Long codigoCliente) {
+		this.clienteService.ativarStatus(codigoCliente);
 		return ResponseEntity.ok().build();
 	}
 

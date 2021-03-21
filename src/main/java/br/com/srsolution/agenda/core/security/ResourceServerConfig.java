@@ -32,7 +32,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 			.cors()
 				.and()
 			.authorizeRequests()
-				.antMatchers("/agenda/v1/clientes/**", "/agenda/v1/contatos/**").hasRole("USER")
+				.antMatchers("/agenda/v1/clientes/**", 
+						"/agenda/v1/contatos/**", 
+						"/agenda/v1/relatorios/**").hasRole("USER")
 				.anyRequest().authenticated()
 				.and()
 				.exceptionHandling().authenticationEntryPoint(authExceptionEntryPoint);	

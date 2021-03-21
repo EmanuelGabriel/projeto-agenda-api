@@ -2,7 +2,6 @@ package br.com.srsolution.agenda.domain.service.contato;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +20,13 @@ public class ContatoServiceImpl implements ContatoService {
 	private static final String CONTATO_COD_NAO_ENCONTRADO = "Contato de código não encontrado";
 	private static final String EMAIL_JA_EXISTENTE = "Já existe um contato registrado com este e-mail";
 
-	@Autowired
 	private ContatoRepository contatoRepository;
-
-	@Autowired
 	private ContatoModelMapper modelMapper;
+
+	public ContatoServiceImpl(ContatoRepository contatoRepository, ContatoModelMapper modelMapper) {
+		this.contatoRepository = contatoRepository;
+		this.modelMapper = modelMapper;
+	}
 
 	@Override
 	public Contato salvar(Contato contato) {

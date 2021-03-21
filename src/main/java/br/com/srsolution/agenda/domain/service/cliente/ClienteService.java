@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import br.com.srsolution.agenda.api.dtos.ClienteDTO;
+import br.com.srsolution.agenda.api.dtos.response.ClienteModelResponse;
 import br.com.srsolution.agenda.domain.model.Cliente;
 
 public interface ClienteService {
@@ -16,9 +16,9 @@ public interface ClienteService {
 
 	Cliente buscarPorCodigo(Long codigo);
 
-	ClienteDTO buscarPorCpf(String cpf);
+	Cliente buscarPorCpf(String cpf);
 
-	List<ClienteDTO> findByAtivo();
+	List<ClienteModelResponse> findByAtivo();
 
 	Cliente atualizar(Long codigo, Cliente cliente);
 
