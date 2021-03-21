@@ -1,3 +1,0 @@
-INSERT INTO contato (nome, email, favorito, telefone) VALUES('Jão da Silva Mota', 'jao2020@gmail.com.br', true, '3523523523');
-INSERT INTO contato (nome, email, favorito, telefone) VALUES('Pedro Alves Cabral', 'pedroalvesgritador@gmail.com', true, '8826788273');
-INSERT INTO contato (nome, email, favorito, telefone) VALUES('Bruna Cardoso Oliveira Pinto', 'brunacardoso@hotmail.com.br', true, '9295239895');
