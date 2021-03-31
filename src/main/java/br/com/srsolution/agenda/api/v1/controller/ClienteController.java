@@ -40,7 +40,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @SecurityRequirement(name = "agenda_oauth")
-@Tag(name = "Recurso de Clientes", description = "Endpoints de Cliente")
+@Tag(name = "Clientes", description = "Recurso de Cliente")
 @RestController
 @RequestMapping(path = "/v1/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ClienteController {
@@ -58,7 +58,8 @@ public class ClienteController {
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping
 	public ResponseEntity<Page<ClienteModelResponse>> listar(
-			@PageableDefault(page = 0, size = 5, direction = Direction.ASC) @RequestParam(value = "page", defaultValue = "0") Integer page,
+			@PageableDefault(page = 0, size = 5, direction = Direction.ASC) 
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "size", defaultValue = "5") Integer size) {
 
 		Page<Cliente> pageCliente = this.clienteService.listarTodos(PageRequest.of(page, size, Sort.by("codigo")));

@@ -22,6 +22,8 @@ public interface ClienteService {
 
 	Cliente atualizar(Long codigo, Cliente cliente);
 
+	byte[] relatorioPorCPFCliente(String cpf) throws Exception;
+
 	void atualizarPropriedadeAtivo(Long codigo, Boolean ativo);
 
 	void ativarStatus(Long codigo);

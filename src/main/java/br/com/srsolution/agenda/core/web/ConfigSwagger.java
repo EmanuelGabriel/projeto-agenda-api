@@ -11,15 +11,15 @@ import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @OpenAPIDefinition(
-		info = @Info(description = "Documentação da API Restful Agenda On-line", 
+		info = @Info(description = "Documentação da Agenda On-line - API", 
 		termsOfService = "Termos de serviço",
-title = "API Restful Agenda On-line", 
+title = "Agenda On-line - API", 
 version = "1.0.0", 
 contact = @Contact(name = "Emanuel Gabriel Sousa", email = "emanuel.gabriel.sousa@protonmail.com", url = "emanuelgabriel.github.io")))
 
 @SecurityScheme(
 		name = "agenda_oauth", 
-		description = "Fluxo oauth2",
+		description = "Fluxo OAuth2",
 type = SecuritySchemeType.OAUTH2,
 scheme = "bearer",
 bearerFormat = "JWT",

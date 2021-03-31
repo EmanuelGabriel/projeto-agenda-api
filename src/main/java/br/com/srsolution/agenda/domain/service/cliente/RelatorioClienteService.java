@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -37,6 +38,24 @@ public class RelatorioClienteService implements RelatorioGeneric {
 
 		// Exporta para byte o PDF para fazer o download
 		return JasperExportManager.exportReportToPdf(print);
+	}
+
+	@Override
+	public byte[] gerarRelatorio(String nomeRelatorio, Map<String, Object> parametros, ServletContext servletContext)
+			throws JRException, SQLException {
+
+		// obter conexão com o banco de dados
+		Connection connection = jdbcTemplate.getDataSource().getConnection();
+
+		// carregar o caminho do arquivo Jasper
+		String caminhoJasper = servletContext.getRealPath("relatorios") + File.separator + nomeRelatorio + ".jasper";
+
+		// gerar o relatório com os dados e conexão
+		JasperPrint print = JasperFillManager.fillReport(caminhoJasper, parametros, connection);
+
+		// Exporta para byte o PDF para fazer o download
+		return JasperExportManager.exportReportToPdf(print);
+
 	}
 
 }
