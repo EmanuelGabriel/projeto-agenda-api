@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @SecurityRequirement(name = "agenda_oauth")
-@Tag(name = "Relatório de Cliente", description = "Recurso de relatório de cliente")
+@Tag(name = "Relatório de Clientes", description = "Recurso de relatório de clientes")
 @RestController
 @RequestMapping(value = "/v1/relatorios", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RelatorioClienteController {
