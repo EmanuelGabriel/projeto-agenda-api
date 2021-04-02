@@ -2,6 +2,7 @@ package br.com.srsolution.agenda.api.dtos.request;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class ClienteModelParcialRequest implements Serializable {
 	@NotBlank
 	private String nome;
 
+	@Email
 	private String email;
 
 }
