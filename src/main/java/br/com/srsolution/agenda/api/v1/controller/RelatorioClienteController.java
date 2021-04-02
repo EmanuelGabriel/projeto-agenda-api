@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,19 +22,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 @SecurityRequirement(name = "agenda_oauth")
 @Tag(name = "Relatório de Clientes", description = "Recurso de relatório de clientes")
 @RestController
 @RequestMapping(value = "/v1/relatorios", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class RelatorioClienteController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RelatorioClienteController.class);
 
 	private static final String DATA_APPLICATION_PDF_BASE64 = "data:application/pdf;base64,";
 
-	@Autowired
-	private RelatorioClienteService relatorioClienteService;
+	private final RelatorioClienteService relatorioClienteService;
 
 	@Operation(description = "Exibe relatório de clientes", summary = "Exibe relatório de clientes")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),

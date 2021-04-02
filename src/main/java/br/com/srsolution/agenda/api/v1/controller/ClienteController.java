@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -38,23 +37,25 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 
 @SecurityRequirement(name = "agenda_oauth")
 @Tag(name = "Clientes", description = "Recurso de clientes")
 @RestController
 @RequestMapping(path = "/v1/clientes", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class ClienteController {
 
-	@Autowired
-	private ClienteService clienteService;
-
-	@Autowired
-	private ClienteModelMapper modelMapper;
+	private final ClienteService clienteService;
+	private final ClienteModelMapper modelMapper;
 
 	@Operation(description = "Lista de clientes", summary = "Lista de clientes")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Forbidden - Você não tem permissão para acessar este recurso"),
 			@ApiResponse(responseCode = "404", description = "Não há clientes registrados"),
+			@ApiResponse(responseCode = "406", description = "Recurso não possui representação que poderia ser aceita pelo consumidor"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping
 	public ResponseEntity<Page<ClienteModelResponse>> listar(
@@ -63,13 +64,15 @@ public class ClienteController {
 
 		Page<Cliente> pageCliente = this.clienteService.listarTodos(PageRequest.of(page, size, Sort.by("codigo")));
 		Page<ClienteModelResponse> pageClienteModelResponse = pageCliente.map(obj -> new ClienteModelResponse(obj));
-
-		return pageCliente != null ? ResponseEntity.ok(pageClienteModelResponse) : ResponseEntity.notFound().build();
+		return pageCliente != null ? ResponseEntity.ok(pageClienteModelResponse) : ResponseEntity.ok().build();
 	}
 
 	@Operation(description = "Adiciona cliente", summary = "Adiciona cliente")
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Cliente inserido com sucesso"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Forbidden - Você não tem permissão para acessar este recurso"),
+			@ApiResponse(responseCode = "406", description = "Recurso não possui representação que poderia ser aceita pelo consumidor"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -82,8 +85,11 @@ public class ClienteController {
 
 	@Operation(description = "Busca cliente por ID", summary = "Busca cliente por ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Forbidden - Você não tem permissão para acessar este recurso"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
+			@ApiResponse(responseCode = "406", description = "Recurso não possui representação que poderia ser aceita pelo consumidor"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("{codigoCliente}")
 	public ResponseEntity<ClienteModelResponse> buscarPorCodigo(@PathVariable Long codigoCliente) {
@@ -93,19 +99,25 @@ public class ClienteController {
 
 	@Operation(description = "Busca cliente por CPF", summary = "Busca cliente por CPF")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Forbidden - Você não tem permissão para acessar este recurso"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este CPF"),
+			@ApiResponse(responseCode = "406", description = "Recurso não possui representação que poderia ser aceita pelo consumidor"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
-	@GetMapping("por-cpf")
-	public ResponseEntity<ClienteModelResponse> buscarPorCpf(@RequestParam String cpf) {
+	@GetMapping("{cpf}/cpf")
+	public ResponseEntity<ClienteModelResponse> buscarPorCpf(@PathVariable String cpf) {
 		var cliente = this.modelMapper.toModel(this.clienteService.buscarPorCpf(cpf));
 		return cliente != null ? ResponseEntity.ok(cliente) : ResponseEntity.notFound().build();
 	}
 
 	@Operation(description = "Clientes com status ativo", summary = "Clientes com status ativo")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Forbidden - Você não tem permissão para acessar este recurso"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com status de ativo"),
+			@ApiResponse(responseCode = "406", description = "Recurso não possui representação que poderia ser aceita pelo consumidor"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@GetMapping("por-ativo")
 	public ResponseEntity<List<ClienteModelResponse>> buscarPorAtivo() {
@@ -115,8 +127,11 @@ public class ClienteController {
 
 	@Operation(description = "Remove cliente por ID", summary = "Remove cliente por ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Forbidden - Você não tem permissão para acessar este recurso"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado um cliente com este código"),
+			@ApiResponse(responseCode = "406", description = "Recurso não possui representação que poderia ser aceita pelo consumidor"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@DeleteMapping("{codigoCliente}")
 	public ResponseEntity<Void> remover(@PathVariable Long codigoCliente) {
@@ -124,10 +139,13 @@ public class ClienteController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@Operation(description = "Atualiza cliente por ID", summary = "Atualiza cliente por ID")
+	@Operation(description = "Atualiza um cliente por ID", summary = "Atualiza um cliente por ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente atualizado"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Forbidden - Você não tem permissão para acessar este recurso"),
 			@ApiResponse(responseCode = "404", description = "Não há cliente cadastrado com este código"),
+			@ApiResponse(responseCode = "406", description = "Recurso não possui representação que poderia ser aceita pelo consumidor"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PutMapping("{codigoCliente}")
 	public ResponseEntity<ClienteModelResponse> atualizar(@PathVariable Long codigoCliente,
@@ -139,8 +157,11 @@ public class ClienteController {
 
 	@Operation(description = "Ativa cliente por ID", summary = "Ativa cliente por ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
-			@ApiResponse(responseCode = "401", description = "Não autorizado"),
+			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Forbidden - Você não tem permissão para acessar este recurso"),
 			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
+			@ApiResponse(responseCode = "406", description = "Recurso não possui representação que poderia ser aceita pelo consumidor"),
 			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
 	@PatchMapping("{codigoCliente}/ativo")
 	public ResponseEntity<Void> ativarStatus(@PathVariable Long codigoCliente) {
