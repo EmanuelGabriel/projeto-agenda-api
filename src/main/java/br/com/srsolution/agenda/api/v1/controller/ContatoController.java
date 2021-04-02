@@ -37,7 +37,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @SecurityRequirement(name = "agenda_oauth")
-@Tag(name = "Recurso de Contatos", description = "Endpoints de contato")
+@Tag(name = "Contatos", description = "Endpoints de contato")
 @RestController
 @RequestMapping(path = "/v1/contatos", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor

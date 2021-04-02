@@ -11,14 +11,14 @@ import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @OpenAPIDefinition(
-		info = @Info(description = "API aberta para contatos e clientes - AgendaOn-line", 
+		info = @Info(description = "API aberta para gerenciamento de contatos e clientes - AgendaOn-line", 
 		termsOfService = "Termos de serviço",
 title = "AgendaOn-line - API", 
 version = "1.0.0", 
 contact = @Contact(name = "Emanuel Gabriel Sousa", email = "emanuel.gabriel.sousa@protonmail.com", url = "emanuelgabriel.github.io")))
 
 @SecurityScheme(
-		name = "AgendaOnline", 
+		name = "agenda_oauth", 
 		description = "Fluxo OAuth2",
 type = SecuritySchemeType.OAUTH2,
 scheme = "bearer",
