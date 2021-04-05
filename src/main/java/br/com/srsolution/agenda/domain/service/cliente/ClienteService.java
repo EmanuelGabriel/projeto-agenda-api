@@ -29,5 +29,7 @@ public interface ClienteService {
 	void ativarStatus(Long codigo);
 
 	void excluir(Long codigo);
+	
+	long quantidade();
 
 }
