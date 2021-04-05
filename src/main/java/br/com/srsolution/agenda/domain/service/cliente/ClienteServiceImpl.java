@@ -137,4 +137,10 @@ public class ClienteServiceImpl implements ClienteService {
 
 	}
 
+	@Override
+	public long quantidade() {
+		var qtd = this.clienteRepository.count();
+		return qtd;
+	}
+
 }

@@ -30,7 +30,6 @@ import br.com.srsolution.agenda.api.dtos.request.ClienteModelInputRequest;
 import br.com.srsolution.agenda.api.dtos.request.ClienteModelParcialRequest;
 import br.com.srsolution.agenda.api.dtos.response.ClienteModelResponse;
 import br.com.srsolution.agenda.api.modelmapper.ClienteModelMapper;
-import br.com.srsolution.agenda.domain.model.Cliente;
 import br.com.srsolution.agenda.domain.service.cliente.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -62,8 +61,8 @@ public class ClienteController {
 			@PageableDefault(page = 0, size = 5, direction = Direction.ASC) @RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "size", defaultValue = "5") Integer size) {
 
-		Page<Cliente> pageCliente = this.clienteService.listarTodos(PageRequest.of(page, size, Sort.by("codigo")));
-		Page<ClienteModelResponse> pageClienteModelResponse = pageCliente.map(obj -> new ClienteModelResponse(obj));
+		var pageCliente = this.clienteService.listarTodos(PageRequest.of(page, size, Sort.by("codigo")));
+		var pageClienteModelResponse = pageCliente.map(obj -> new ClienteModelResponse(obj));
 		return pageCliente != null ? ResponseEntity.ok(pageClienteModelResponse) : ResponseEntity.ok().build();
 	}
 
@@ -125,7 +124,7 @@ public class ClienteController {
 		return clientes != null ? ResponseEntity.ok(clientes) : ResponseEntity.notFound().build();
 	}
 
-	@Operation(description = "Remove cliente por ID", summary = "Remove cliente por ID")
+	@Operation(description = "Remove um cliente por ID", summary = "Remove um cliente por ID")
 	@ApiResponses(value = { @ApiResponse(responseCode = "204", description = "Cliente removido com sucesso"),
 			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
 			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
@@ -167,6 +166,20 @@ public class ClienteController {
 	public ResponseEntity<Void> ativarStatus(@PathVariable Long codigoCliente) {
 		this.clienteService.ativarStatus(codigoCliente);
 		return ResponseEntity.ok().build();
+	}
+
+	@Operation(description = "Exibe a quantidade de clientes registrados", summary = "Exibe a quantidade de clientes registrados")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "Requisição inválida (erro do cliente)"),
+			@ApiResponse(responseCode = "401", description = "Unauthorized - não autorizado"),
+			@ApiResponse(responseCode = "403", description = "Forbidden - Você não tem permissão para acessar este recurso"),
+			@ApiResponse(responseCode = "404", description = "Não foi encontrado cliente com este código"),
+			@ApiResponse(responseCode = "406", description = "Recurso não possui representação que poderia ser aceita pelo consumidor"),
+			@ApiResponse(responseCode = "500", description = "O servidor encontrou um erro não previsto") })
+	@GetMapping(value = "quantidade-cliente")
+	public ResponseEntity<Long> quantidadeClientes() {
+		var quantidade = this.clienteService.quantidade();
+		return ResponseEntity.ok(quantidade);
 	}
 
 	private URI getUri(Long codigo) {
